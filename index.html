@@ -174,6 +174,51 @@ button{font-family:inherit;cursor:pointer}
 .qzfb{display:none;margin-top:12px;padding:13px 15px;border-radius:11px;background:var(--ice-soft);border-left:4px solid var(--cyan);font-size:13.5px;color:#26314f;line-height:1.55}
 .qzfb.show{display:block}
 .qzfb b{color:var(--navy)}
+/* sim/escape generated screens */
+.gen-empty{min-height:300px;display:grid;place-items:center;text-align:center;color:var(--muted)}
+.gen-empty .ph svg{width:54px;height:54px;color:#cfd9ec;margin-bottom:12px}
+.gen-empty .ph p{font-size:13.5px;max-width:320px;line-height:1.5;margin:0 auto}
+.ergrid{display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start}
+.ercol{display:flex;flex-direction:column;gap:16px}
+.eropts{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.eropt{display:flex;gap:12px;align-items:flex-start;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer;transition:.14s}
+.eropt:hover{border-color:var(--cyan);background:var(--ice-soft)}
+.eropt.sel{border-color:var(--cyan);background:var(--ice-soft)}
+.eropt input{accent-color:var(--cyan);width:16px;height:16px;margin-top:3px;flex:none}
+.eropt b{display:block;font-size:13.5px;color:var(--text)}
+.eropt span{display:block;font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4}
+.ercode{font-family:var(--font-d);font-size:22px;color:var(--navy);letter-spacing:2px}
+/* escape room richer content */
+.er-section{margin:13px 0}
+.er-section>b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:6px}
+.er-section>p{font-size:13.5px;color:var(--body);line-height:1.55;margin:0}
+.er-clue{background:linear-gradient(120deg,#0E1E3F,#1E2761);color:#dbe7f5;border-radius:12px;padding:14px 16px;margin:13px 0}
+.er-clue .lab{display:block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#7Fd6ef;font-weight:700;margin-bottom:6px}
+.er-clue>div{font-size:14px;line-height:1.5;font-style:italic}
+.er-fb{margin-top:16px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+.er-fb h3{font-family:var(--font-d);color:var(--navy);font-size:15px;margin:0 0 12px}
+.er-msg{margin-top:14px}
+.er-msg b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.er-msg p{font-size:13.5px;color:var(--body);line-height:1.55;margin:0}
+.er-code-reveal{margin:14px 0 10px;font-size:13.5px;color:var(--body)}
+.er-code-reveal b{font-family:var(--font-d);color:var(--cyan-dk);letter-spacing:3px;font-size:18px}
+.erstat{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.erstat:last-child{border-bottom:0}
+.erstat .k{color:var(--muted)}
+.erstat .v{font-weight:700;color:var(--navy)}
+.erst-tag{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:999px}
+.erst-tag.done{background:rgba(61,174,123,.12);color:var(--ok)}
+.erst-tag.cur{background:var(--ice-soft);color:var(--cyan-dk)}
+.erst-tag.todo{background:#eef1f6;color:var(--muted)}
+/* faculty: add course */
+.ncwrap{display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start}
+.ncform{padding:20px;display:flex;flex-direction:column;gap:14px}
+.ncside{padding:18px}
+.pdfpick{display:flex;align-items:center;gap:10px;border:1.5px dashed var(--line);border-radius:11px;padding:13px 15px;cursor:pointer;color:var(--muted);font-size:13.5px;transition:.14s}
+.pdfpick:hover{border-color:var(--cyan);color:var(--navy)}
+.pdfpick svg{width:18px;height:18px;flex:none}
+.ncmsg{font-size:13px;font-weight:600;min-height:2px}
+.ncmsg.err{color:var(--bad)}
 /* generator */
 .genwrap{display:grid;grid-template-columns:320px 1fr;gap:16px;height:560px}
 .genform{padding:18px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
@@ -295,6 +340,37 @@ button{font-family:inherit;cursor:pointer}
 .modal .close{background:var(--paper);color:var(--navy);font-weight:700;padding:12px 18px;border-radius:10px}
 .src-body{font-size:14px;line-height:1.65;color:var(--text);white-space:pre-wrap}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* ===== POLISH PASS ===== */
+.main{background:
+  radial-gradient(1100px 380px at 80% -10%, rgba(60,190,225,.07), transparent 60%),
+  radial-gradient(900px 360px at -5% 0%, rgba(30,39,97,.05), transparent 55%),
+  var(--paper);}
+.card{box-shadow:0 1px 2px rgba(21,27,61,.04),0 8px 24px rgba(21,27,61,.07);border-color:#E7EDF7}
+.btn-cyan{background:linear-gradient(135deg,#46c8ea,#2BA3C4);color:#fff;box-shadow:0 6px 16px rgba(43,163,196,.26);transition:.16s}
+.btn-cyan:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(43,163,196,.32);filter:saturate(1.05)}
+.btn-cyan:active{transform:translateY(0)}
+.genbtn{transition:.16s}
+.genbtn:hover{transform:translateY(-1px);filter:brightness(1.04)}
+.gh{transition:.14s}
+.topbar{background:linear-gradient(120deg,#10173a,#1a2350);box-shadow:0 2px 16px rgba(10,15,35,.22)}
+.phead{animation:fadeUp .34s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.phead h1{letter-spacing:-.01em;font-size:26px}
+.phead .eyebrow{display:inline-flex;align-items:center;gap:7px}
+.phead .eyebrow::before{content:"";width:16px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--cyan-dk))}
+.srcitem{transition:.14s}
+.srcitem:hover{transform:translateX(2px)}
+.quickq{transition:.14s}
+.quickq:hover{transform:translateX(2px)}
+.fld input:focus,.fld select:focus,.fld textarea:focus,.respbox:focus,.home-search input:focus,.coursebar .coursesel:focus,.composer input:focus,.qzitem textarea:focus,#ncText:focus,#ncName:focus,#ncTag:focus,#ncDesc:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(60,190,225,.15)}
+.side::-webkit-scrollbar{width:8px}.side::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:8px}
+.genbody::-webkit-scrollbar,.ctxpanel .body::-webkit-scrollbar,.stream::-webkit-scrollbar{width:8px}
+.genbody::-webkit-scrollbar-thumb,.ctxpanel .body::-webkit-scrollbar-thumb,.stream::-webkit-scrollbar-thumb{background:#d4ddec;border-radius:8px}
+.card.stat{position:relative;overflow:hidden}
+.card.stat::after{content:"";position:absolute;right:-24px;top:-24px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(60,190,225,.10),transparent 70%)}
+.card.stat .v{background:linear-gradient(120deg,var(--navy),var(--cyan-dk));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.eropt,.qzopt{transition:.16s}
+.featcard:hover{transform:translateY(-3px) scale(1.01)}
 </style>
 </head>
 <body>
@@ -451,7 +527,7 @@ function retrieve(q,mats,k){const qt=tok(q);return mats.map(m=>{const mt=tok(m.t
 /* ===== NAV ===== */
 const NAV={
  student:[{id:'s_lib',icon:I.book,label:'Cursurile mele'},{id:'s_chat',icon:I.chat,label:'Asistent curs'},{id:'s_quiz',icon:I.quiz,label:'Autoevaluare'},{id:'s_sim',icon:I.sim,label:'Simulare profesională'},{id:'s_escape',icon:I.lock,label:'Escape Room'},{id:'s_prog',icon:I.chart,label:'Progresul meu'}],
- faculty:[{id:'f_dash',icon:I.grid,label:'Panou de bord'},{id:'f_upload',icon:I.up,label:'Încarcă curriculum'},{id:'f_gen',icon:I.wand,label:'Generare conținut'},{id:'f_cohort',icon:I.chart,label:'Analiză grupă'},{id:'f_assist',icon:I.chat,label:'Asistent didactic'}]
+ faculty:[{id:'f_dash',icon:I.grid,label:'Panou de bord'},{id:'f_upload',icon:I.up,label:'Adaugă curs'},{id:'f_gen',icon:I.wand,label:'Generare conținut'},{id:'f_cohort',icon:I.chart,label:'Analiză grupă'},{id:'f_assist',icon:I.chat,label:'Asistent didactic'}]
 };
 const FIRST={student:'s_lib',faculty:'f_dash'};
 
@@ -622,78 +698,130 @@ Răspuns orientativ: ${it.model}`},{role:'user',content:ans}],400);fb.innerHTML=
  fb.className='qzfb show';fb.innerHTML=`<b>${ok?'✓ Corect.':'✗ Nu chiar.'}</b> ${it.explain||''}`;
 }
 
-/* ===== STUDENT: SIMULATION ===== */
-let SIMSTATE={resp:'',fb:null,hint:''};
-function scr_s_sim(){
- const s=SIM;
- return `<div class="phead"><div class="eyebrow">Parcurs interactiv · simulare profesională</div><h1>${s.title}</h1>
-  <p>Preiei un caz real și iei decizii profesionale. Primești ghidaj și feedback formativ de la asistentul AI — fără să ți se dea direct soluția.</p></div>
- <div class="sim-hero"><div class="l"><div class="eyebrow">Caz: strategie de preț pentru un produs nou</div><h2>${s.ctx.split('.')[0]}.</h2>
-   <p>${s.ctx}</p><div class="tags"><span>📘 Disciplină: ${s.disc}</span><span>⏱ ${s.dur}</span><span>🎓 ${s.lvl}</span></div></div>
-   <div class="r"><div class="ic">${I.sim}</div><b>Scenariu ghidat</b><span>cu feedback AI</span></div></div>
+/* ===== STUDENT: SIMULATION (course-driven) ===== */
+let SS={scenario:null,resp:'',fb:null,hint:'',busy:false};
+function simRole(c){const m={'Medicină':'Ești medic și preiei un caz clinic','Construcții':'Ești inginer de structuri pe un proiect real','Economie':'Ești consultant economic pentru o firmă','Business':'Ești consultant de marketing pentru un client','Psihologie':'Ești psiholog într-o ședință de evaluare','Filosofie':'Moderezi o dezbatere de idei','Informatică':'Ești dezvoltator software pe un proiect','Artă':'Ești curator pentru o expoziție'};return m[c.tag]||('Ești specialist în '+c.name);}
+function sampleScenario(c){const t=c.materials.map(m=>m.title);return {role:simRole(c),context:'Primești un caz practic legat de „'+c.name+'". Analizează situația, ia decizii și justifică-le folosind noțiunile din curs.',objectives:['Identifică elementele relevante din situația prezentată.','Aplică noțiunea „'+(t[0]||c.name)+'" pentru o primă concluzie.',(t[1]?('Corelează cu „'+t[1]+'" și anticipează implicațiile.'):'Anticipează implicațiile deciziei tale.'),'Formulează o recomandare clară și justific-o.'],stages:[['Înțelegerea situației','done'],['Analiza datelor','cur'],['Decizia','todo'],['Justificarea','todo'],['Raport final','todo']]};}
+function syncSimCourse(){const cs=document.getElementById('simCourse');if(cs)activeCourse=cs.value;}
+async function genSim(){syncSimCourse();const c=course();SS={scenario:null,resp:'',fb:null,hint:'',busy:true};renderMain();
+ const ctx=c.materials.map(m=>m.title+': '+m.content).join('  •  ');
+ try{ if(isLive()){const sys='Creezi o simulare profesională pentru cursul „'+c.name+'", bazată pe materialele de mai jos. Returnează STRICT JSON: {"role":"Ești ... (rol profesional)","context":"cazul, 2-3 propoziții","objectives":["...","...","...","..."],"stages":["et1","et2","et3","et4","et5"]}. În română. Materiale: '+ctx;
+   const raw=await callAzure([{role:'system',content:sys},{role:'user',content:'Generează scenariul în JSON.'}],900);
+   const j=JSON.parse(raw.replace(/```json|```/g,'').trim());
+   j.stages=(j.stages||[]).map((x,i)=>[x,i===0?'cur':'todo']); SS.scenario=j;
+ } else { SS.scenario=sampleScenario(c); } }
+ catch(e){ SS.scenario=sampleScenario(c); }
+ SS.busy=false;renderMain();
+}
+function scr_s_sim(){const c=course();
+ const head=`<div class="phead"><div class="eyebrow">Parcurs interactiv · simulare profesională</div><h1>Simulare profesională</h1><p>Alege un curs și generează un scenariu real. Iei decizii și primești feedback formativ — fără să ți se dea direct soluția.</p></div>
+  <div class="coursebar"><span class="lbl">Curs</span><select id="simCourse" class="coursesel" onchange="syncSimCourse()">${COURSES.map(x=>`<option value="${x.id}" ${x.id===activeCourse?'selected':''}>${x.name}</option>`).join('')}</select><button class="btn-cyan" style="margin-left:auto" onclick="genSim()">${I.wand} ${SS.scenario?'Regenerează':'Generează scenariul'}</button></div>`;
+ if(SS.busy)return head+'<div class="card" style="padding:22px"><div class="skel" style="width:40%;height:18px"></div><div class="skel"></div><div class="skel" style="width:85%"></div><div class="skel" style="width:70%"></div></div>';
+ if(!SS.scenario)return head+`<div class="card gen-empty"><div class="ph">${I.sim.replace(/currentColor/g,'#cfd9ec')}<p>Apasă „Generează scenariul" ca să primești un caz practic din „${c.name}".</p></div></div>`;
+ const s=SS.scenario;
+ return head+`<div class="sim-hero"><div class="l"><div class="eyebrow">Caz practic · ${c.name}</div><h2>${s.role}</h2><p>${s.context}</p><div class="tags"><span>📘 ${c.name}</span><span>⏱ 25–30 min</span><span>🎓 Intermediar</span></div></div><div class="r"><div class="ic">${I.sim}</div><b>Scenariu ghidat</b><span>cu feedback AI</span></div></div>
  <div class="simgrid"><div class="simcol">
-   <div class="card simbox"><h3>Obiectivele tale acum</h3>${s.obj.map(o=>`<div class="obj">${o}</div>`).join('')}</div>
-   <div class="card simbox"><h3>Răspunsul tău</h3>
-     <textarea class="respbox" id="simResp" placeholder="Argumentează decizia de preț folosind noțiunile din curs…">${SIMSTATE.resp}</textarea>
-     <div class="simbtns"><button class="gh" onclick="simHint()">${I.hint} Cere un indiciu</button><button class="gh" onclick="ask('Explică elasticitatea cererii');go('s_chat')">${I.book} Explică o noțiune</button></div>
-     ${SIMSTATE.hint?`<div class="quizfb show" style="border-color:var(--gold)"><b>Indiciu:</b> ${SIMSTATE.hint}</div>`:''}
-     <button class="btn-cyan" style="margin-top:6px" onclick="simSubmit()">${I.send} Trimite răspunsul</button>
-   </div>
-   ${SIMSTATE.fb?simFeedback(SIMSTATE.fb):''}
- </div>
- <div class="simcol"><div class="card simbox"><h3>Progresul în scenariu</h3>
-   ${s.steps.map((st,i)=>`<div class="stepitem ${st[1]==='done'?'done':st[1]==='cur'?'cur':''}"><span class="d">${st[1]==='done'?'✓':i+1}</span>${st[0]}</div>`).join('')}</div>
-   <div class="card simbox"><h3>Detalii</h3><div style="font-size:13px;color:var(--body);line-height:1.7">Tip: Simulare profesională<br>Format: text liber + ghidaj AI<br>Asistent: activ pentru feedback</div></div>
+   <div class="card simbox"><h3>Obiectivele tale</h3>${(s.objectives||[]).map(o=>`<div class="obj">${o}</div>`).join('')}</div>
+   <div class="card simbox"><h3>Răspunsul tău</h3><textarea class="respbox" id="simResp" placeholder="Argumentează decizia folosind noțiunile din curs…">${SS.resp}</textarea>
+     <div class="simbtns"><button class="gh" onclick="simHint()">${I.hint} Cere un indiciu</button><button class="gh" onclick="go('s_chat')">${I.book} Întreabă asistentul</button></div>
+     ${SS.hint?`<div class="quizfb show" style="border-color:var(--gold)"><b>Indiciu:</b> ${SS.hint}</div>`:''}
+     <button class="btn-cyan" style="margin-top:6px" onclick="simSubmit()">${I.send} Trimite răspunsul</button></div>
+   ${SS.fb?simFeedback(SS.fb):''}
+ </div><div class="simcol">
+   <div class="card simbox"><h3>Progresul în scenariu</h3>${(s.stages||[]).map((st,i)=>`<div class="stepitem ${st[1]==='done'?'done':st[1]==='cur'?'cur':''}"><span class="d">${st[1]==='done'?'✓':i+1}</span>${st[0]}</div>`).join('')}</div>
+   <div class="card simbox"><h3>Detalii</h3><div style="font-size:13px;color:var(--body);line-height:1.7">Tip: Simulare profesională<br>Curs: ${c.name}<br>Format: text liber + ghidaj AI</div></div>
  </div></div>`;
 }
-function simFeedback(f){return `<div class="card simbox"><h3>Feedback și evaluare</h3>
- ${[['Claritatea explicației',f.claritate],['Corectitudinea noțiunilor',f.corect],['Justificarea deciziei',f.justif]].map(r=>`<div class="fbrow"><div class="lab">${r[0]}<b>${r[1]}/100</b></div><div class="fbbar"><i style="width:${r[1]}%"></i></div></div>`).join('')}
- <h3 style="margin-top:16px">Sugestii de îmbunătățire</h3>${f.sug.map(x=>`<div class="obj">${x}</div>`).join('')}</div>`;}
-function simHint(){SIMSTATE.resp=document.getElementById('simResp').value;
- if(isLive()){const src=MICRO.find(m=>m.id===SIM.srcId);
-   callAzure([{role:'system',content:`Ești asistent într-o simulare de consultanță economică. Oferă UN indiciu scurt care ghidează studentul fără a-i da soluția. O propoziție, română.\nMaterial: ${src.content}`},{role:'user',content:'Indiciu pentru decizia de preț.'}],600).then(t=>{SIMSTATE.hint=t;renderMain()}).catch(()=>{SIMSTATE.hint='Leagă prețul propus de elasticitatea cererii: dacă cererea e elastică, o reducere poate crește venitul total.';renderMain()});
- }else{SIMSTATE.hint='Leagă prețul propus de elasticitatea cererii: dacă cererea e elastică, o reducere poate crește venitul total.';renderMain()}
-}
-function simSubmit(){const r=document.getElementById('simResp').value.trim();SIMSTATE.resp=r;if(!r){SIMSTATE.hint='Scrie mai întâi un răspuns argumentat.';renderMain();return;}
- if(isLive()){const src=MICRO.find(m=>m.id===SIM.srcId);
-   callAzure([{role:'system',content:`Evaluează răspunsul unui student la o simulare de strategie de preț. Returnează STRICT JSON: {"claritate":0-100,"corect":0-100,"justif":0-100,"sug":["...","..."]}. Bazează-te pe noțiunile din material. Sugestiile în română.\nMaterial: ${src.content}`},{role:'user',content:r}],900).then(t=>{try{const j=JSON.parse(t.replace(/```json|```/g,''));SIMSTATE.fb=j}catch(e){SIMSTATE.fb=SIM.fallback}renderMain()}).catch(()=>{SIMSTATE.fb=SIM.fallback;renderMain()});
- }else{SIMSTATE.fb=SIM.fallback;renderMain()}
-}
+function simFeedback(f){return `<div class="card simbox"><h3>Feedback și evaluare</h3>${[['Claritatea explicației',f.claritate],['Corectitudinea noțiunilor',f.corect],['Justificarea deciziei',f.justif]].map(r=>`<div class="fbrow"><div class="lab">${r[0]}<b>${r[1]}/100</b></div><div class="fbbar"><i style="width:${r[1]}%"></i></div></div>`).join('')}<h3 style="margin-top:16px">Sugestii de îmbunătățire</h3>${(f.sug||[]).map(x=>`<div class="obj">${x}</div>`).join('')}</div>`;}
+function simHint(){SS.resp=document.getElementById('simResp').value;const c=course();const ctx=c.materials.map(m=>m.content).join('  •  ');
+ if(isLive()){callAzure([{role:'system',content:'Ești ghid într-o simulare la cursul „'+c.name+'". Oferă UN indiciu scurt (o propoziție, română) care ajută fără a da soluția. Material: '+ctx},{role:'user',content:'Dă-mi un indiciu.'}],300).then(t=>{SS.hint=t;renderMain()}).catch(()=>{SS.hint='Pornește de la noțiunile-cheie ale cursului și leagă-le explicit de situație.';renderMain()});}
+ else{SS.hint='Pornește de la noțiunile-cheie ale cursului și leagă-le explicit de situație.';renderMain()}}
+function simSubmit(){const r=document.getElementById('simResp').value.trim();SS.resp=r;if(!r){SS.hint='Scrie mai întâi un răspuns argumentat.';renderMain();return;}
+ const c=course();const ctx=c.materials.map(m=>m.content).join('  •  ');const fb={claritate:76,corect:80,justif:70,sug:['Leagă explicit afirmațiile de noțiunile din curs.','Adaugă un exemplu concret care îți susține argumentul.','Încheie cu o recomandare clară și justificată.']};
+ if(isLive()){callAzure([{role:'system',content:'Evaluează răspunsul unui student la o simulare la cursul „'+c.name+'". Returnează STRICT JSON: {"claritate":0-100,"corect":0-100,"justif":0-100,"sug":["...","..."]}. Sugestii în română. Material: '+ctx},{role:'user',content:r}],700).then(t=>{try{SS.fb=JSON.parse(t.replace(/```json|```/g,''))}catch(e){SS.fb=fb}renderMain()}).catch(()=>{SS.fb=fb;renderMain()});}
+ else{SS.fb=fb;renderMain()}}
 
-/* ===== STUDENT: ESCAPE ===== */
-let stageIdx=0,hintsUsed=0,startTime=null,roomDone=false,erHint='';
-function scr_s_escape(){
- if(!startTime)startTime=Date.now();
- const inner=roomDone?winHtml():erStageHtml();
- return `<div class="phead"><div class="eyebrow">Învățare gamificată</div><h1>Escape Room — Evadează din Piață</h1>
-   <p>Rezolvă trei provocări economice contra cronometru. Prof. Aria oferă indicii progresive, nu răspunsuri.</p></div>
- <div class="er-top"><div></div><div class="timer" id="timer">10:00</div></div>
- <div class="doors">${STAGES.map((s,i)=>`<div class="door ${i<stageIdx?'solved':i===stageIdx?'current':''}">${i<stageIdx?'✓':i+1}</div>`).join('')}</div>
- <div class="card">${inner}</div>`;
+/* ===== STUDENT: ESCAPE ROOM (multi-room, course-driven) ===== */
+let ER={rooms:[],idx:0,hints:0,startTime:null,done:false,hint:'',fb:null,sel:-1,arg:'',code:[],busy:false};
+function sampleRooms(c){const m=c.materials;const n=Math.min(5,Math.max(3,m.length));const rooms=[];
+ for(let i=0;i<n;i++){const ans=m[i%m.length];const ds=[m[(i+1)%m.length],m[(i+2)%m.length]];
+   let opts=[{label:ans.title,desc:ans.content.split('. ')[0]+'.'}];
+   ds.forEach(d=>opts.push({label:d.title,desc:d.content.split('. ')[0]+'.'}));
+   opts.push({label:'Niciuna dintre acestea',desc:'Nicio variantă nu corespunde indiciului de pe panou.'});
+   const cor=i%opts.length; const tmp=opts[0];opts[0]=opts[cor];opts[cor]=tmp;
+   rooms.push({title:'Camera '+(i+1),
+     story:'Intri într-o încăpere blocată din '+c.name+'. Pe un panou luminează un indiciu legat de o noțiune din curs. Ușa se deschide doar dacă identifici corect noțiunea și îți argumentezi alegerea.',
+     objectives:['Citește cu atenție indiciul afișat pe panou.','Alege noțiunea din curs care corespunde cel mai bine descrierii.','Explică pe scurt de ce ai ales-o, pentru a primi feedback formativ.'],
+     clue:ans.content.split('. ')[0]+'.',
+     question:'Ce noțiune din curs corespunde indiciului de pe panou?',
+     options:opts,correct:cor,explain:ans.content,hint:'Recitește definiția noțiunii „'+ans.title+'" și compar-o cu indiciul.'});
+ }
+ return rooms;}
+function syncErCourse(){const cs=document.getElementById('erCourse');if(cs)activeCourse=cs.value;}
+async function genRooms(){syncErCourse();const c=course();ER={rooms:[],idx:0,hints:0,startTime:Date.now(),done:false,hint:'',fb:null,sel:-1,arg:'',code:[],busy:true};renderMain();
+ const ctx=c.materials.map(m=>m.title+': '+m.content).join('  •  ');
+ try{ if(isLive()){const sys='Creezi un Escape Room educativ pentru cursul „'+c.name+'", cu 4 camere secvențiale, bazat pe materialele de mai jos. Returnează STRICT JSON: un array de obiecte {"title":"Camera 1","story":"2 propoziții de poveste","objectives":["instrucțiune 1","instrucțiune 2","instrucțiune 3"],"clue":"indiciul de pe panou (o frază)","question":"întrebarea provocării","options":[{"label":"...","desc":"o linie"}],"correct":<index optiune corecta>,"explain":"explicația noțiunii","hint":"indiciu fără a da răspunsul"}. 3-4 opțiuni per cameră. În română. Materiale: '+ctx;
+   const raw=await callAzure([{role:'system',content:sys},{role:'user',content:'Generează camerele în JSON.'}],1800);
+   const arr=JSON.parse(raw.replace(/```json|```/g,'').trim()); ER.rooms=Array.isArray(arr)&&arr.length?arr:sampleRooms(c);
+ } else { ER.rooms=sampleRooms(c); } }
+ catch(e){ ER.rooms=sampleRooms(c); }
+ ER.startTime=Date.now();ER.busy=false;renderMain();
 }
-function erStageHtml(){const st=STAGES[stageIdx];
- return `<div class="er-card"><div class="eyebrow" style="color:var(--cyan-dk)">Provocarea ${stageIdx+1} din ${STAGES.length}</div>
-  <h2 style="font-family:var(--font-d);color:var(--navy);margin:6px 0">${st.title}</h2>
-  <div class="er-challenge">${st.challenge}</div>
-  <div class="er-actions"><input id="erInput" placeholder="Scrie codul ușii…" onkeydown="if(event.key==='Enter')checkDoor()">
-   <button class="btn-cyan" onclick="checkDoor()">Deschide ușa</button>
-   <button class="gh" style="border:1px solid var(--line);background:#fff;border-radius:13px;padding:0 16px;font-weight:600;color:var(--navy)" onclick="erGetHint()">${I.hint} Indiciu</button></div>
-  ${erHint?`<div class="quizfb show" style="border-color:var(--gold)"><b>Indiciu de la Prof. Aria:</b> ${erHint}</div>`:''}</div>`;
+function erMap(){return ER.rooms.map((r,i)=>`<div class="door ${i<ER.idx?'solved':i===ER.idx?'current':''}">${i<ER.idx?'✓':i+1}</div>`).join('');}
+function codeStr(){return ER.rooms.map((r,i)=>ER.code[i]!=null?ER.code[i]:'_').join(' · ');}
+function scr_s_escape(){const c=course();
+ const head=`<div class="phead"><div class="eyebrow">Învățare gamificată</div><h1>Escape Room</h1><p>Alege un curs, generează camerele și deblochează ieșirea rezolvând provocări din materialele cursului.</p></div>
+  <div class="coursebar"><span class="lbl">Curs</span><select id="erCourse" class="coursesel" onchange="syncErCourse()">${COURSES.map(x=>`<option value="${x.id}" ${x.id===activeCourse?'selected':''}>${x.name}</option>`).join('')}</select><button class="btn-cyan" style="margin-left:auto" onclick="genRooms()">${I.wand} ${ER.rooms.length?'Regenerează':'Generează camerele'}</button></div>`;
+ if(ER.busy)return head+'<div class="card" style="padding:22px"><div class="skel" style="width:40%;height:18px"></div><div class="skel"></div><div class="skel" style="width:85%"></div></div>';
+ if(!ER.rooms.length)return head+`<div class="card gen-empty"><div class="ph">${I.lock.replace(/currentColor/g,'#cfd9ec')}<p>Apasă „Generează camerele" ca să pornești misiunea din „${c.name}".</p></div></div>`;
+ const inner=ER.done?erWin():erRoom();
+ const statRows=(rows)=>rows.map(r=>`<div class="erstat"><span class="k">${r[0]}</span><span class="v">${r[1]}</span></div>`).join('');
+ return head+`<div class="er-top"><div><b style="color:var(--navy);font-family:var(--font-d);font-size:17px">Escape Room: ${c.name}</b><div style="font-size:12.5px;color:var(--muted);margin-top:2px">Misiunea ta: deblochează ieșirea · ${ER.rooms.length} camere secvențiale</div></div><div class="timer" id="timer">20:00</div></div>
+ <div class="doors">${erMap()}</div>
+ <div class="ergrid"><div>${inner}</div>
+   <div class="ercol">
+     <div class="card simbox"><h3>Progresul tău</h3>${statRows([['Stare curentă',ER.done?'Finalizat':'În progres'],['Camera curentă',ER.done?'—':(ER.idx+1)+' / '+ER.rooms.length],['Indicii folosite',ER.hints]])}</div>
+     <div class="card simbox"><h3>Starea provocărilor</h3>${ER.rooms.map((r,i)=>{const st=i<ER.idx?'done':i===ER.idx&&!ER.done?'cur':ER.done?'done':'todo';const lab={done:'Finalizat',cur:'În lucru',todo:'Urmează'}[st];return `<div class="erstat"><span class="k">${r.title}</span><span class="erst-tag ${st}">${lab}</span></div>`;}).join('')}</div>
+     <div class="card simbox"><h3>Cod de ieșire</h3><div class="ercode">${codeStr()}</div><div style="font-size:12px;color:var(--muted);margin-top:8px">Fiecare cameră rezolvată dezvăluie o cifră din cod.</div></div>
+     <div class="card simbox"><h3>Detalii activitate</h3>${statRows([['Tip','Escape Room educativ'],['Disciplină',c.name],['Suport AI','Indiciu + explicație']])}</div>
+     <div class="card simbox"><h3>Reguli prietenoase</h3><div class="obj">Poți cere indicii fără să pierzi progresul.</div><div class="obj">Scopul e să înțelegi noțiunile, nu să termini repede.</div><div class="obj">La final primești explicații pentru toate camerele.</div></div>
+   </div></div>`;
 }
-function winHtml(){const sec=Math.floor((Date.now()-startTime)/1000);
- return `<div class="win"><div class="em">🏆</div><h2>Ai evadat din Piață!</h2>
-  <div class="stats"><div class="stat"><b>${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}</b><span>Timp</span></div><div class="stat"><b>${hintsUsed}</b><span>Indicii</span></div></div>
-  <button class="btn-cyan" onclick="stageIdx=0;hintsUsed=0;roomDone=false;erHint='';startTime=Date.now();renderMain()">Joacă din nou</button></div>`;
+function erRoom(){const r=ER.rooms[ER.idx];
+ return `<div class="card er-card"><div class="eyebrow" style="color:var(--cyan-dk)">Camera ${ER.idx+1} din ${ER.rooms.length} · ● Provocare activă</div><h2 style="font-family:var(--font-d);color:var(--navy);margin:6px 0">${r.title}</h2>
+  <div class="er-section"><b>Povestea camerei</b><p>${r.story||''}</p></div>
+  <div class="er-section"><b>Ce trebuie să faci</b>${(r.objectives||[]).map(o=>`<div class="obj">${o}</div>`).join('')}</div>
+  <div class="er-clue"><span class="lab">Indiciu găsit pe panoul de control</span><div>${r.clue||r.question}</div></div>
+  <div class="er-challenge">Provocare: ${r.question}</div>
+  <div class="eropts">${(r.options||[]).map((o,i)=>`<label class="eropt ${ER.sel===i?'sel':''}"><input type="radio" name="eropt" value="${i}" ${ER.sel===i?'checked':''} onchange="ER.sel=${i}"><div><b>${'ABCD'[i]||''}. ${o.label}</b><span>${o.desc||''}</span></div></label>`).join('')}</div>
+  <div class="er-section"><b>Răspunsul tău argumentat</b><textarea id="erArg" class="respbox" placeholder="Explică pe scurt de ce ai ales această variantă…" oninput="ER.arg=this.value">${ER.arg||''}</textarea></div>
+  <div class="simbtns"><button class="gh" onclick="erHintBtn()">${I.hint} Cere un indiciu</button><button class="gh" onclick="go('s_chat')">${I.book} Explică noțiunea</button></div>
+  ${ER.hint?`<div class="quizfb show" style="border-color:var(--gold)"><b>Indiciu:</b> ${ER.hint}</div>`:''}
+  <button class="btn-cyan" style="margin-top:6px" onclick="erSubmit()">${I.send} Trimite răspunsul</button>
+  ${ER.fb?erFeedback():''}</div>`;
 }
-function norm(s){return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
-function checkDoor(){const st=STAGES[stageIdx];const v=document.getElementById('erInput');
- if(norm(v.value)===norm(st.answer)){erHint='';if(stageIdx>=STAGES.length-1){roomDone=true}else{stageIdx++;hintsUsed=0}renderMain()}
- else{v.style.borderColor='var(--bad)';setTimeout(()=>v.style.borderColor='',800)}
+function erFeedback(){const f=ER.fb;
+ return `<div class="er-fb"><h3>Feedback și deblocare</h3>${f.rubric.map(r=>`<div class="fbrow"><div class="lab">${r[0]}<b>${r[1]}/10</b></div><div class="fbbar"><i style="width:${r[1]*10}%"></i></div></div>`).join('')}
+  <div class="er-msg"><b>Mesaj de la asistentul AI</b><p>${f.msg}</p></div>
+  ${f.ok?`<div class="er-code-reveal">Cod parțial obținut: <b>${codeStr()}</b></div><button class="btn-cyan" onclick="erNext()">${ER.idx>=ER.rooms.length-1?'Deblochează ieșirea →':'Continuă la Camera '+(ER.idx+2)+' →'}</button>`:`<div style="color:var(--bad);font-weight:600;margin-top:8px">Mai încearcă — alege varianta corectă și reformulează argumentul.</div>`}</div>`;
 }
-function erGetHint(){const st=STAGES[stageIdx];hintsUsed++;
- if(isLive()){const src=MICRO.find(m=>m.id===st.srcId);
-   callAzure([{role:'system',content:`Ești Prof. Aria într-un escape room educativ. Oferă UN indiciu (nr. ${hintsUsed}) care apropie studentul de răspuns FĂRĂ a-l dezvălui. O propoziție, română.\nProvocare: ${st.challenge}\nRăspuns confidențial: ${st.answer}\nMaterial: ${src.content}`},{role:'user',content:'Indiciu.'}],600).then(t=>{erHint=t;renderMain()}).catch(()=>{erHint=st.hints[Math.min(hintsUsed-1,st.hints.length-1)];renderMain()});
- }else{erHint=st.hints[Math.min(hintsUsed-1,st.hints.length-1)];renderMain()}
+function erHintBtn(){const r=ER.rooms[ER.idx];ER.hints++;
+ if(isLive()){const c=course();callAzure([{role:'system',content:'Ești ghid într-un escape room la cursul „'+c.name+'". Oferă UN indiciu (o propoziție, română) care apropie de răspuns fără a-l dezvălui. Provocare: '+r.question},{role:'user',content:'Indiciu.'}],200).then(t=>{ER.hint=t;renderMain()}).catch(()=>{ER.hint=r.hint||'Recitește definiția noțiunii cheie.';renderMain()});}
+ else{ER.hint=r.hint||'Recitește definiția noțiunii cheie.';renderMain()}}
+function erSubmit(){const r=ER.rooms[ER.idx];if(ER.sel<0){ER.hint='Alege o variantă mai întâi.';renderMain();return;}
+ const ta=document.getElementById('erArg');const arg=(ta?ta.value:ER.arg||'').trim();ER.arg=arg;
+ const ok=ER.sel===r.correct;
+ const idScore=ok?9:3;const justScore=arg.length>80?9:arg.length>30?7:arg.length>0?5:3;const undScore=ok?8:4;
+ const msg=ok?('Ai identificat corect noțiunea. '+(arg.length>30?'Argumentul tău susține bine alegerea.':'Pentru un scor mai bun, detaliază justificarea.')+' '+(r.explain||'')):('Nu este varianta corectă. Recitește indiciul și definiția: '+(r.explain||''));
+ if(ok)ER.code[ER.idx]=Math.floor(Math.random()*9)+1;
+ ER.fb={ok,rubric:[['Identificarea noțiunii corecte',idScore],['Justificarea alegerii',justScore],['Înțelegerea conceptului',undScore]],msg};
+ ER.hint='';renderMain();
+}
+function erNext(){ER.fb=null;ER.sel=-1;ER.arg='';ER.hint='';if(ER.idx>=ER.rooms.length-1){ER.done=true}else{ER.idx++;ER.hints=0}renderMain();}
+function erWin(){const sec=Math.floor((Date.now()-ER.startTime)/1000);
+ return `<div class="card"><div class="win"><div class="em">🏆</div><h2>Ai evadat!</h2><div style="color:var(--muted);margin-bottom:8px">Cod de ieșire complet: <b style="color:var(--cyan-dk);letter-spacing:3px">${ER.code.join(' · ')}</b></div>
+  <div class="stats"><div class="stat"><b>${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}</b><span>Timp</span></div><div class="stat"><b>${ER.rooms.length}</b><span>Camere</span></div></div>
+  <button class="btn-cyan" onclick="genRooms()">Joacă din nou</button></div></div>`;
 }
 
 /* ===== STUDENT: PROGRESS ===== */
@@ -712,32 +840,57 @@ function scr_s_prog(){return `<div class="phead"><div class="eyebrow">Progresul 
 function scr_f_dash(){return `<div class="phead"><div class="eyebrow">Panou pentru cadre didactice</div><h1>Bună, Prof. Ionescu</h1>
   <p>Generează materiale din cursurile tale, urmărește progresul grupelor și economisește timp la sarcinile repetitive de predare.</p></div>
  <div class="grid g3" style="margin-bottom:16px">
-   <div class="card stat"><div class="k">Cursuri active</div><div class="v">3</div><div class="d">316 studenți în total</div></div>
+   <div class="card stat"><div class="k">Cursuri active</div><div class="v">${COURSES.length}</div><div class="d">peste 300 studenți în total</div></div>
    <div class="card stat"><div class="k">Materiale generate</div><div class="v">24</div><div class="d">teste, laboratoare, fișe</div></div>
    <div class="card stat"><div class="k">Progres mediu grupe</div><div class="v">64%</div><div class="d">+6% față de luna trecută</div></div>
  </div>
  <div class="card insight" style="margin-bottom:16px"><div class="ic">${I.chart}</div><div><div class="t">Recomandare: grupa întâmpină dificultăți la <b>elasticitate</b></div><p>34% din răspunsuri greșite sunt pe acest subiect. Generează o fișă de recapitulare sau un test țintit în câteva secunde.</p></div></div>
  <div class="grid g2"><div class="card" style="padding:18px"><b style="color:var(--text);font-family:var(--font-d)">Acțiuni rapide</b>
-   <button class="btn-cyan" style="width:100%;justify-content:flex-start;margin-top:14px" onclick="go('f_upload')">${I.up} Încarcă un curs nou</button>
+   <button class="btn-cyan" style="width:100%;justify-content:flex-start;margin-top:14px" onclick="go('f_upload')">${I.up} Adaugă un curs</button>
    <button class="btn-cyan" style="width:100%;justify-content:flex-start;margin-top:10px" onclick="go('f_gen')">${I.wand} Generează material de curs</button>
    <button class="btn-cyan" style="width:100%;justify-content:flex-start;margin-top:10px;background:var(--navy);color:#fff" onclick="go('f_cohort')">${I.chart} Vezi analiza pe grupă</button></div>
  <div class="card" style="padding:18px"><b style="color:var(--text);font-family:var(--font-d)">Cursurile mele</b><div style="margin-top:14px">
-   ${[['Microeconomie','142 studenți'],['Macroeconomie','98 studenți'],['Marketing','76 studenți']].map(c=>`<div class="srcitem" onclick="go('f_cohort')"><div class="ic" style="background:var(--navy)">${I.book.replace(/currentColor/g,'#3CBEE1')}</div><div style="flex:1"><div class="tt">${c[0]}</div><div class="mm">${c[1]}</div></div></div>`).join('')}</div></div></div>`;
+   ${COURSES.slice(0,5).map((c,i)=>{const cnt=[142,98,76,120,64,88,54][i]||50;return `<div class="srcitem" onclick="go('f_cohort')"><div class="ic" style="background:linear-gradient(120deg,${c.c1},${c.c2})">${I.book.replace(/currentColor/g,'#fff')}</div><div style="flex:1"><div class="tt">${c.name}</div><div class="mm">${cnt} studenți</div></div></div>`;}).join('')}</div></div></div>`;
 }
 
-/* ===== FACULTY: UPLOAD ===== */
-function scr_f_upload(){return `<div class="phead"><div class="eyebrow">Materiale de curs</div><h1>Încarcă curriculum</h1>
-  <p>Trage fișierele cursului (PDF, Word, notițe, slide-uri). Asistentul AI și generatorul de conținut se antrenează automat pe ele — fără configurări tehnice.</p></div>
- <div class="drop" id="drop" onclick="document.getElementById('fileInp').click()">${I.up}<b>Trage fișierele aici sau click pentru a încărca</b><span>PDF, DOCX, TXT, PPTX · materialele rămân ale tale</span></div>
- <input type="file" id="fileInp" multiple style="display:none" onchange="handleFiles(this.files)">
- <div style="margin-top:18px">${UPLOADS.length?UPLOADS.map(f=>`<div class="filerow"><div class="ic">${I.doc}</div><div><div class="nm">${f.name}</div><div class="mm">${f.size} · ${f.kind}</div></div><div class="ok">✓ indexat</div></div>`).join(''):'<div style="text-align:center;color:var(--muted);padding:30px;font-size:13.5px">Niciun fișier încărcat încă.</div>'}</div>
- ${UPLOADS.length?`<div class="card insight" style="margin-top:18px"><div class="ic">${I.wand}</div><div><div class="t">Gata! Asistentul cursului este antrenat pe ${UPLOADS.length} ${UPLOADS.length===1?'material':'materiale'}.</div><p>Treci la „Generare conținut” pentru a crea teste, laboratoare sau fișe din ele — sau testează-l în „Asistent didactic”.</p></div></div>`:''}`;
+/* ===== FACULTY: ADD COURSE ===== */
+let NEWPDF=null, ADDED=null;
+function pickPdf(input){const fl=input.files&&input.files[0];if(!fl)return;NEWPDF={name:fl.name};const el=document.getElementById('pdfName');if(el)el.textContent=fl.name+' · se procesează în Faza 2';}
+function ncVal(id){const e=document.getElementById(id);return e?e.value.trim():'';}
+function addCourse(){const name=ncVal('ncName');const msg=document.getElementById('ncMsg');
+ if(!name){if(msg){msg.className='ncmsg err';msg.textContent='Adaugă cel puțin numele cursului.';}return;}
+ const tag=ncVal('ncTag')||'General';const desc=ncVal('ncDesc');const text=ncVal('ncText');const id='c'+Date.now();
+ const palette=[['#1E2761','#3CBEE1'],['#26305C','#5B7FB9'],['#3A2E5C','#8E7CC3'],['#7A2E3B','#E0707E'],['#1E5C57','#4FB6A8'],['#14324A','#2BA3C4'],['#6B3E1E','#D9A05B']];
+ const col=palette[COURSES.length % palette.length];
+ let materials=text?text.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean).slice(0,12).map((p,i)=>({id:id+'_'+i,title:name+' — fragment '+(i+1),ref:'Material '+(i+1),content:p})):[];
+ if(!materials.length)materials=[{id:id+'_0',title:name,ref:'Descriere',content:desc||('Conținutul cursului „'+name+'" va fi disponibil după procesarea PDF.')}];
+ const docs=NEWPDF?[[NEWPDF.name,'PDF · încărcat']]:[['Material de curs','adăugat manual']];
+ COURSES.push({id,name,tag,progress:0,c1:col[0],c2:col[1],description:desc||'Curs adăugat de profesor.',materials,docs});
+ activeCourse=id;NEWPDF=null;ADDED=name;renderMain();
 }
-function handleFiles(files){[...files].forEach(f=>{const kb=Math.max(1,Math.round(f.size/1024));const ext=(f.name.split('.').pop()||'').toUpperCase();
-   const rec={name:f.name,size:kb>1024?(kb/1024).toFixed(1)+' MB':kb+' KB',kind:ext+' · sursă curs'};UPLOADS.push(rec);
-   if(/^(txt|md|csv)$/i.test(ext)){const r=new FileReader();r.onload=()=>{course().materials.push({id:Date.now()+Math.random(),title:f.name.replace(/\.[^.]+$/,''),ref:f.name,content:String(r.result).slice(0,1200)})};r.readAsText(f);}
- });renderMain();}
-['dragover','dragleave','drop'].forEach(()=>{});
+function scr_f_upload(){
+ if(ADDED){const nm=ADDED;return `<div class="phead"><div class="eyebrow">Adaugă curs</div><h1>Curs adăugat</h1></div>
+   <div class="card insight" style="border-color:var(--ok)"><div class="ic" style="background:var(--ok)">${I.wand}</div><div><div class="t">„${nm}" a fost adăugat.</div><p>Cursul apare acum în „Cursurile mele”, în asistent, autoevaluare, simulare și escape room — pentru studenți.</p></div></div>
+   <div class="simbtns" style="margin-top:16px"><button class="btn-cyan" onclick="ADDED=null;go('s_lib')">${I.book} Vezi în Cursurile mele (student)</button><button class="gh" onclick="ADDED=null;renderMain()">${I.up} Adaugă încă un curs</button></div>`;}
+ return `<div class="phead"><div class="eyebrow">Materiale de curs</div><h1>Adaugă un curs</h1>
+   <p>Creează un curs nou: nume, descriere și conținut. Studenții îl primesc imediat în toate instrumentele — asistent, autoevaluare, simulare, escape room.</p></div>
+ <div class="ncwrap"><div class="card ncform">
+   <div class="fld"><label>Nume curs *</label><input id="ncName" placeholder="ex: Termodinamică tehnică"></div>
+   <div class="fld"><label>Disciplină</label><input id="ncTag" placeholder="ex: Inginerie"></div>
+   <div class="fld"><label>Descriere scurtă</label><input id="ncDesc" placeholder="O frază despre curs (apare pe card)"></div>
+   <div class="fld"><label>Conținutul cursului <span style="color:var(--muted);font-weight:500">— text, antrenează asistentul acum</span></label>
+     <textarea id="ncText" class="respbox" style="min-height:150px" placeholder="Lipește notițele / textul cursului. Separă secțiunile printr-un rând gol. În Faza 2, acest text va fi extras automat din PDF."></textarea></div>
+   <div class="fld"><label>Fișier PDF <span style="color:var(--muted);font-weight:500">— opțional, extragere în Faza 2</span></label>
+     <div class="pdfpick" onclick="document.getElementById('pdfInp').click()">${I.up}<span id="pdfName">Alege un PDF…</span></div>
+     <input type="file" id="pdfInp" accept="application/pdf" style="display:none" onchange="pickPdf(this)"></div>
+   <div class="ncmsg" id="ncMsg"></div>
+   <button class="genbtn" onclick="addCourse()">${I.wand} Adaugă cursul</button>
+ </div>
+ <div class="card ncside"><h3 style="font-family:var(--font-d);color:var(--navy);margin:0 0 12px;font-size:15px">Cursuri existente (${COURSES.length})</h3>
+   ${COURSES.map(c=>`<div class="srcitem"><div class="ic" style="background:linear-gradient(120deg,${c.c1},${c.c2})">${I.book.replace(/currentColor/g,'#fff')}</div><div style="flex:1"><div class="tt">${c.name}</div><div class="mm">${c.tag} · ${c.materials.length} materiale</div></div></div>`).join('')}
+   <div style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5">Cursurile adăugate folosesc același model ca restul platformei — în Faza 2, încărcarea PDF completează automat „Conținutul cursului”.</div>
+ </div></div>`;
+}
 
 /* ===== FACULTY: GENERATOR ===== */
 let genType='Test grilă';
@@ -825,8 +978,8 @@ function tFallback(q){if(/întreb|gril|test/i.test(q))return '1. Cererea este el
 const SCREENS={s_chat:scr_s_chat,s_lib:scr_s_lib,s_quiz:scr_s_quiz,s_sim:scr_s_sim,s_escape:scr_s_escape,s_prog:scr_s_prog,f_dash:scr_f_dash,f_upload:scr_f_upload,f_gen:scr_f_gen,f_cohort:scr_f_cohort,f_assist:scr_f_assist};
 
 /* timer loop */
-setInterval(()=>{const t=document.getElementById('timer');if(!t||roomDone||!startTime)return;
- const rem=600-Math.floor((Date.now()-startTime)/1000);
+setInterval(()=>{const t=document.getElementById('timer');if(!t||ER.done||!ER.startTime)return;
+ const rem=1200-Math.floor((Date.now()-ER.startTime)/1000);
  if(rem<=0){t.textContent='00:00';t.className='timer dead';return;}
  t.textContent=`${String(Math.floor(rem/60)).padStart(2,'0')}:${String(rem%60).padStart(2,'0')}`;t.className='timer'+(rem<60?' warn':'');
 },500);
