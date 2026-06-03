@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -97,6 +98,18 @@ button{font-family:inherit;cursor:pointer}
 .srcitem .mm{font-size:11px;color:var(--muted);margin-top:2px}
 .quickq{font-size:12px;color:var(--navy);background:var(--ice-soft);border:1px solid #d6e4fb;padding:9px 11px;border-radius:9px;margin-bottom:8px;cursor:pointer;transition:.14s;line-height:1.35}
 .quickq:hover{background:var(--cyan);color:#06283b;border-color:var(--cyan)}
+/* asistent curs: course bar + starters */
+.coursebar{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:16px;box-shadow:var(--shadow-sm);flex-wrap:wrap}
+.coursebar .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.coursebar .coursesel{border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-family:inherit;font-size:14px;font-weight:600;color:var(--text);background:var(--paper);outline:none;min-width:230px}
+.coursebar .coursesel:focus{border-color:var(--cyan)}
+.coursebar .ctag{font-size:11px;font-weight:700;background:var(--ice-soft);color:var(--cyan-dk);padding:4px 10px;border-radius:999px}
+.coursebar .cdesc{font-size:12.5px;color:var(--muted);flex:1;min-width:160px}
+.starters{margin-top:4px;padding:14px;background:var(--ice-soft);border:1px dashed #bfe3ef;border-radius:14px}
+.starters .st-lbl{font-size:12px;font-weight:700;color:var(--cyan-dk);margin-bottom:9px}
+.st-chips{display:flex;flex-wrap:wrap;gap:8px}
+.st-chip{font-size:12.5px;font-weight:600;color:var(--navy);background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 13px;cursor:pointer;transition:.14s;font-family:inherit}
+.st-chip:hover{border-color:var(--cyan);background:var(--cyan);color:#06283b}
 /* course cards */
 .course{padding:0;overflow:hidden;cursor:pointer;transition:.18s;border-radius:var(--radius)}
 .course:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
@@ -109,6 +122,24 @@ button{font-family:inherit;cursor:pointer}
 .course .bd .bar{height:6px;background:var(--line);border-radius:6px;margin-top:12px;overflow:hidden}
 .course .bd .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--cyan-dk));border-radius:6px}
 .course .bd .pc{font-size:11px;color:var(--body);margin-top:6px;font-weight:600}
+/* landing extras */
+.home-search{position:relative;margin:0 0 22px;max-width:520px}
+.home-search input{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 16px 13px 44px;font-family:inherit;font-size:14.5px;color:var(--text);background:#fff;outline:none;box-shadow:var(--shadow-sm)}
+.home-search input:focus{border-color:var(--cyan)}
+.home-search svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+.featrow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+.featcard{display:flex;flex-direction:column;gap:9px;padding:18px;border-radius:16px;cursor:pointer;color:#fff;position:relative;overflow:hidden;transition:.18s;box-shadow:var(--shadow-sm)}
+.featcard::after{content:"";position:absolute;right:-30px;top:-30px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.10)}
+.featcard:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.featcard .fi{width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.18);display:grid;place-items:center;position:relative;z-index:1}
+.featcard .fi svg{width:21px;height:21px;color:#fff}
+.featcard b{font-size:15px;font-weight:700;position:relative;z-index:1}
+.featcard span{font-size:12px;opacity:.9;line-height:1.4;position:relative;z-index:1}
+.sectitle{font-family:var(--font-d);font-size:18px;color:var(--text);font-weight:700;margin:4px 0 14px;display:flex;align-items:center;gap:10px}
+.sectitle .cnt{font-family:var(--font-b);font-size:11.5px;font-weight:700;color:var(--cyan-dk);background:var(--ice-soft);padding:3px 10px;border-radius:999px}
+.coursegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:16px}
+.course .bd .desc{font-size:12.5px;color:var(--body);margin-top:6px;line-height:1.45;min-height:36px}
+.nores{text-align:center;color:var(--muted);padding:40px;font-size:14px}
 /* quiz */
 .quiz{padding:24px 26px;max-width:760px;margin:0 auto}
 .quiz .qnum{font-size:12px;color:var(--cyan-dk);font-weight:700;letter-spacing:.05em}
@@ -120,6 +151,29 @@ button{font-family:inherit;cursor:pointer}
 .opt.wrong{border-color:var(--bad);background:rgba(210,104,95,.07)}.opt.wrong .mk{border-color:var(--bad);background:var(--bad);color:#fff}
 .quizfb{margin-top:6px;padding:15px 17px;border-radius:12px;background:var(--ice-soft);border-left:4px solid var(--cyan);font-size:13.5px;color:#26314f;line-height:1.55;display:none}
 .quizfb.show{display:block;animation:fade .3s}.quizfb b{color:var(--navy)}
+/* autoevaluare generator */
+.qzwrap{display:grid;grid-template-columns:300px 1fr;gap:16px}
+.qzform{padding:18px;display:flex;flex-direction:column;gap:14px;height:fit-content}
+.qzout{padding:22px;min-height:440px}
+.qz-empty{height:100%;min-height:380px;display:grid;place-items:center;text-align:center;color:var(--muted)}
+.qz-empty .ph svg{width:54px;height:54px;color:#cfd9ec;margin-bottom:12px}
+.qz-empty .ph p{font-size:13.5px;max-width:300px;line-height:1.5;margin:0 auto}
+.qzitem{padding:16px 0;border-bottom:1px solid var(--line)}
+.qzitem:last-child{border-bottom:0}
+.qzq{font-weight:700;color:var(--text);font-size:15px;margin-bottom:12px;line-height:1.4}
+.qzopts{display:flex;flex-direction:column;gap:9px;margin-bottom:12px}
+.qzopt{display:flex;align-items:center;gap:11px;padding:11px 14px;border:1.5px solid var(--line);border-radius:11px;cursor:pointer;font-size:13.5px;color:var(--text);transition:.14s}
+.qzopt:hover{border-color:var(--cyan);background:var(--ice-soft)}
+.qzopt input{accent-color:var(--cyan);width:16px;height:16px;flex:none}
+.qzopt.correct{border-color:var(--ok);background:rgba(61,174,123,.08)}
+.qzopt.wrong{border-color:var(--bad);background:rgba(210,104,95,.07)}
+.qzitem textarea{width:100%;min-height:88px;border:1.5px solid var(--line);border-radius:11px;padding:12px;font-family:inherit;font-size:13.5px;color:var(--text);background:var(--paper);outline:none;resize:vertical;margin-bottom:12px}
+.qzitem textarea:focus{border-color:var(--cyan)}
+.qzcheck{background:var(--navy);color:#fff;font-weight:700;font-size:13px;padding:9px 16px;border-radius:10px;border:0;font-family:inherit;cursor:pointer}
+.qzcheck:hover{background:var(--cyan);color:#06283b}
+.qzfb{display:none;margin-top:12px;padding:13px 15px;border-radius:11px;background:var(--ice-soft);border-left:4px solid var(--cyan);font-size:13.5px;color:#26314f;line-height:1.55}
+.qzfb.show{display:block}
+.qzfb b{color:var(--navy)}
 /* generator */
 .genwrap{display:grid;grid-template-columns:320px 1fr;gap:16px;height:560px}
 .genform{padding:18px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
@@ -312,14 +366,37 @@ const MICRO=[
  {id:8,title:"Pragul de rentabilitate",ref:"Curs 6 · pag. 14",content:"Pragul de rentabilitate este nivelul de producție la care veniturile totale acoperă costurile totale, iar profitul este zero. Peste acest prag, firma începe să obțină profit."},
 ];
 const COURSES=[
- {id:'micro',name:'Microeconomie',tag:'Economie',progress:62,c1:'#1E2761',c2:'#3CBEE1',materials:MICRO,
+ {id:'micro',name:'Microeconomie',tag:'Economie',progress:62,c1:'#1E2761',c2:'#3CBEE1',
+  description:'Cerere, ofertă, prețuri și deciziile agenților economici.',materials:MICRO,
   docs:[['Curs · Cerere și ofertă','PDF · 14 pagini'],['Seminar · Aplicații rezolvate','PDF · 9 pagini'],['Formule — sinteză','PDF · 3 pagini']]},
- {id:'macro',name:'Macroeconomie',tag:'Economie',progress:28,c1:'#26305C',c2:'#2BA3C4',
-  materials:[{id:101,title:"Produsul intern brut",ref:"Curs 1 · pag. 6",content:"PIB-ul măsoară valoarea totală a bunurilor și serviciilor finale produse într-o economie într-o perioadă dată."},{id:102,title:"Inflația",ref:"Curs 3 · pag. 8",content:"Inflația reprezintă creșterea generalizată și susținută a nivelului prețurilor, care reduce puterea de cumpărare a banilor."}],
-  docs:[['Curs · Indicatori macroeconomici','PDF · 11 pagini'],['Note · Politici monetare','PDF · 6 pagini']]},
+ {id:'rezmat',name:'Rezistența materialelor',tag:'Construcții',progress:48,c1:'#26305C',c2:'#5B7FB9',
+  description:'Eforturi, deformații și comportamentul materialelor sub solicitare.',
+  materials:[{id:301,title:"Efort normal și tangențial",ref:"Curs 7 · pag. 4",content:"Efortul normal (σ) acționează perpendicular pe secțiune și apare la întindere sau compresiune. Efortul tangențial (τ) acționează în planul secțiunii și produce forfecare."},{id:302,title:"Diagrame de eforturi",ref:"Curs 8 · pag. 11",content:"Diagramele de eforturi (N, T, M) reprezintă variația forței axiale, a forței tăietoare și a momentului încovoietor de-a lungul unei bare solicitate."}],
+  docs:[['Curs 7 — Eforturi în secțiune','PDF · 18 pagini'],['Seminar — Aplicații rezolvate','PDF · 9 pagini']]},
+ {id:'filo',name:'Introducere în filosofie',tag:'Filosofie',progress:30,c1:'#3A2E5C',c2:'#8E7CC3',
+  description:'Mari întrebări și curente: etică, logică, cunoaștere.',
+  materials:[{id:401,title:"Etica",ref:"Curs 3 · pag. 7",content:"Etica studiază criteriile binelui și răului. Curentele majore includ etica virtuții (Aristotel), deontologia (Kant) și utilitarismul (Mill)."},{id:402,title:"Logica",ref:"Curs 5 · pag. 2",content:"Logica formală studiază raționamentele valide. Un silogism este valid dacă concluzia decurge necesar din premise."},{id:403,title:"Epistemologia",ref:"Curs 6 · pag. 9",content:"Epistemologia analizează natura cunoașterii, distincția dintre opinie și cunoaștere justificată și problema scepticismului."}],
+  docs:[['Curs · Mari curente filosofice','PDF · 16 pagini'],['Antologie de texte','PDF · 22 pagini']]},
+ {id:'anat',name:'Anatomie umană',tag:'Medicină',progress:71,c1:'#7A2E3B',c2:'#E0707E',
+  description:'Structura corpului uman: sisteme, organe și funcții.',
+  materials:[{id:501,title:"Sistemul osos",ref:"Curs 2 · pag. 5",content:"Scheletul uman adult are 206 oase și asigură suport, protecția organelor și producerea celulelor sangvine în măduva osoasă."},{id:502,title:"Sistemul muscular",ref:"Curs 4 · pag. 12",content:"Mușchii scheletici sunt voluntari și permit mișcarea prin contracție; lucrează adesea în perechi agonist–antagonist."}],
+  docs:[['Curs · Aparatul locomotor','PDF · 20 pagini'],['Atlas anatomic','PDF · 40 pagini']]},
+ {id:'psiho',name:'Psihologie cognitivă',tag:'Psihologie',progress:22,c1:'#1E5C57',c2:'#4FB6A8',
+  description:'Cum percepem, memorăm, gândim și luăm decizii.',
+  materials:[{id:601,title:"Memoria",ref:"Curs 3 · pag. 8",content:"Memoria de lucru reține temporar un număr limitat de elemente (aproximativ 7±2), în timp ce memoria de lungă durată stochează informația consolidată."},{id:602,title:"Distorsiuni cognitive",ref:"Curs 6 · pag. 14",content:"Euristicile de raționament pot produce erori sistematice, precum biasul de confirmare sau efectul de ancorare."}],
+  docs:[['Curs · Procese cognitive','PDF · 15 pagini'],['Studii de caz','PDF · 7 pagini']]},
+ {id:'py',name:'Programare în Python',tag:'Informatică',progress:55,c1:'#14324A',c2:'#2BA3C4',
+  description:'Programare de la zero: sintaxă, structuri și funcții.',
+  materials:[{id:701,title:"Variabile și tipuri",ref:"Curs 1 · pag. 6",content:"În Python variabilele nu necesită declararea tipului. Tipurile de bază includ int, float, str, bool și colecțiile list, tuple și dict."},{id:702,title:"Structuri de control",ref:"Curs 2 · pag. 3",content:"Buclele for și while repetă instrucțiuni, iar if/elif/else execută cod în mod condiționat."},{id:703,title:"Funcții",ref:"Curs 3 · pag. 10",content:"Funcțiile se definesc cu def, pot primi argumente și returna valori, încurajând reutilizarea codului."}],
+  docs:[['Curs · Bazele Python','PDF · 24 pagini'],['Caiet de exerciții','PDF · 12 pagini']]},
  {id:'mk',name:'Marketing',tag:'Business',progress:45,c1:'#1E2761',c2:'#C9A227',
+  description:'Strategii de piață: produs, preț, plasare și promovare.',
   materials:[{id:201,title:"Mixul de marketing",ref:"Curs 2 · pag. 4",content:"Mixul de marketing (cei 4P) cuprinde produsul, prețul, plasarea și promovarea — instrumentele prin care firma își atinge obiectivele pe piață."},{id:202,title:"Segmentarea pieței",ref:"Curs 4 · pag. 10",content:"Segmentarea împarte piața în grupuri de consumatori cu nevoi similare, pentru a adapta oferta și comunicarea."}],
   docs:[['Curs · Fundamente de marketing','PDF · 12 pagini'],['Studiu de caz','PDF · 5 pagini']]},
+ {id:'arta',name:'Istoria artei',tag:'Artă',progress:12,c1:'#6B3E1E',c2:'#D9A05B',
+  description:'De la Renaștere la modernism: curente, autori, opere.',
+  materials:[{id:801,title:"Renașterea",ref:"Curs 4 · pag. 3",content:"Renașterea (secolele XV–XVI) readuce idealurile clasice, perspectiva liniară și studiul anatomiei; reprezentanți: Leonardo, Michelangelo, Rafael."},{id:802,title:"Impresionismul",ref:"Curs 9 · pag. 7",content:"Impresionismul (secolul XIX) surprinde lumina și momentul prin tușe vizibile; reprezentanți: Monet, Renoir, Degas."}],
+  docs:[['Curs · Curente artistice','PDF · 18 pagini'],['Album de imagini','PDF · 30 pagini']]},
 ];
 const QUIZ=[
  {q:"Cererea pentru un bun este elastică atunci când:",o:["Coeficientul de elasticitate este mai mare decât 1","Coeficientul este egal cu 0","Cantitatea nu reacționează la preț","Prețul este fix"],c:0,e:"Cererea este elastică când o mică variație de preț determină o variație procentuală mai mare a cantității, deci coeficientul depășește 1.",src:4},
@@ -345,7 +422,7 @@ let UPLOADS=[];
 
 /* ===== STATE ===== */
 let cfg={endpoint:'',deploy:'',key:'',ver:'2024-08-01-preview'};
-let role='student',current='s_chat',activeCourse='micro';
+let role='student',current='s_lib',activeCourse='micro';
 const CHATS={};const TCHAT=[];
 function course(){return COURSES.find(c=>c.id===activeCourse)}
 function isLive(){return (cfg.endpoint&&cfg.deploy&&cfg.key)||location.protocol!=='file:'}
@@ -373,10 +450,10 @@ function retrieve(q,mats,k){const qt=tok(q);return mats.map(m=>{const mt=tok(m.t
 
 /* ===== NAV ===== */
 const NAV={
- student:[{id:'s_chat',icon:I.chat,label:'Asistent curs'},{id:'s_lib',icon:I.book,label:'Cursurile mele'},{id:'s_quiz',icon:I.quiz,label:'Autoevaluare'},{id:'s_sim',icon:I.sim,label:'Simulare profesională'},{id:'s_escape',icon:I.lock,label:'Escape Room'},{id:'s_prog',icon:I.chart,label:'Progresul meu'}],
+ student:[{id:'s_lib',icon:I.book,label:'Cursurile mele'},{id:'s_chat',icon:I.chat,label:'Asistent curs'},{id:'s_quiz',icon:I.quiz,label:'Autoevaluare'},{id:'s_sim',icon:I.sim,label:'Simulare profesională'},{id:'s_escape',icon:I.lock,label:'Escape Room'},{id:'s_prog',icon:I.chart,label:'Progresul meu'}],
  faculty:[{id:'f_dash',icon:I.grid,label:'Panou de bord'},{id:'f_upload',icon:I.up,label:'Încarcă curriculum'},{id:'f_gen',icon:I.wand,label:'Generare conținut'},{id:'f_cohort',icon:I.chart,label:'Analiză grupă'},{id:'f_assist',icon:I.chat,label:'Asistent didactic'}]
 };
-const FIRST={student:'s_chat',faculty:'f_dash'};
+const FIRST={student:'s_lib',faculty:'f_dash'};
 
 /* ===== ENGINE ===== */
 function renderSide(){
@@ -397,22 +474,32 @@ function setRole(r){_setRole(r);current=FIRST[r];renderSide();renderMain();docum
 
 /* ===== STUDENT: CHAT ===== */
 function chatArr(){return CHATS[activeCourse]||(CHATS[activeCourse]=[{role:'ai',text:`Salut! Sunt asistentul cursului de ${course().name}. Întreabă-mă orice — răspund din materialele încărcate de profesor.`}])}
+const STARTERS=[
+ ['Rezumă cursul','Rezumă acest curs în câteva idei principale.'],
+ ['Ce voi învăța aici?','Ce voi învăța la acest curs?'],
+ ['Fapte-cheie','Care sunt cele mai importante fapte-cheie din acest curs?'],
+ ['Fă-mi un test scurt','Generează un scurt test de autoevaluare din acest curs, cu 3 întrebări și răspunsuri.'],
+ ['Explică conceptul principal','Explică-mi pe scurt conceptul principal al acestui curs.'],
+ ['Un exemplu practic','Dă-mi un exemplu practic legat de acest curs.'],
+];
+function starterBlock(){return `<div class="starters"><div class="st-lbl">💡 Încearcă să întrebi</div><div class="st-chips">${STARTERS.map(x=>`<button class="st-chip" onclick="ask('${x[1]}')">${x[0]}</button>`).join('')}</div></div>`;}
 function scr_s_chat(){
- const c=course();const msgs=chatArr();
- return `<div class="phead"><div class="eyebrow">Asistent personal de învățare</div><h1>${c.name}</h1>
-   <p>Pune întrebări despre curs. Răspunsurile sunt construite pe notițele și materialele încărcate de profesor${isLive()?'':' (mod demo — fără cheie Azure)'}.</p></div>
+ const c=course();const msgs=chatArr();const fresh=msgs.length<=1;
+ return `<div class="phead"><div class="eyebrow">Asistent personal de învățare</div><h1>Asistent curs</h1>
+   <p>Alege un curs și pune întrebări — răspunsurile sunt construite pe materialele cursului${isLive()?'':' (mod demo)'}.</p></div>
+ <div class="coursebar"><span class="lbl">Curs</span>
+   <select class="coursesel" onchange="activeCourse=this.value;renderMain()">${COURSES.map(x=>`<option value="${x.id}" ${x.id===activeCourse?'selected':''}>${x.name}</option>`).join('')}</select>
+   <span class="ctag">${c.tag}</span><span class="cdesc">${c.description||''}</span></div>
  <div class="chatwrap">
    <div class="card chat">
-     <div class="ch-head"><div class="ci">${I.chat}</div><div><div class="t">Asistent · ${c.name}</div><div class="s">conectat la materialele cursului</div></div>
-       <select onchange="activeCourse=this.value;renderMain()">${COURSES.map(x=>`<option value="${x.id}" ${x.id===activeCourse?'selected':''}>${x.name}</option>`).join('')}</select></div>
-     <div class="stream" id="stream">${msgs.map(renderMsg).join('')}</div>
+     <div class="ch-head"><div class="ci">${I.chat}</div><div><div class="t">Asistent · ${c.name}</div><div class="s">conectat la materialele cursului</div></div></div>
+     <div class="stream" id="stream">${msgs.map(renderMsg).join('')}${fresh?starterBlock():''}</div>
      <div class="composer"><input id="chatInput" placeholder="Scrie o întrebare despre curs…" onkeydown="if(event.key==='Enter')ask()"><button class="send" onclick="ask()">${I.send}</button></div>
    </div>
    <div class="card ctxpanel"><div class="h">Surse din acest curs</div><div class="body">
      ${c.docs.map(d=>`<div class="srcitem"><div class="ic">${I.doc}</div><div><div class="tt">${d[0]}</div><div class="mm">${d[1]}</div></div></div>`).join('')}
      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:14px 4px 8px">Întrebări rapide</div>
-     <div class="quickq" onclick="ask('Dă-mi un exemplu numeric')">Dă-mi un exemplu numeric</div>
-     <div class="quickq" onclick="ask('Care formulă se aplică aici?')">Care formulă se aplică aici?</div>
+     ${STARTERS.slice(0,4).map(x=>`<div class="quickq" onclick="ask('${x[1]}')">${x[0]}</div>`).join('')}
      <div class="quickq" onclick="go('s_quiz')">Testează-mă pe acest curs →</div>
    </div></div>
  </div>`;
@@ -438,31 +525,101 @@ async function ask(preset){
 }
 
 /* ===== STUDENT: LIBRARY ===== */
-function scr_s_lib(){return `<div class="phead"><div class="eyebrow">Biblioteca de învățare</div><h1>Cursurile mele</h1>
- <p>Fiecare curs are propriul asistent AI, antrenat pe materialele încărcate de profesor. Deschide un curs pentru a întreba sau a te autoevalua.</p></div>
- <div class="grid g3">${COURSES.map(c=>`<div class="card course" onclick="activeCourse='${c.id}';go('s_chat')">
-   <div class="top" style="background:linear-gradient(120deg,${c.c1},${c.c2})"><span class="tag">${c.tag}</span>${I.book}</div>
-   <div class="bd"><h3>${c.name}</h3><div class="meta">${c.materials.length} materiale · asistent AI activ</div>
-   <div class="bar"><i style="width:${c.progress}%"></i></div><div class="pc">${c.progress}% parcurs</div></div></div>`).join('')}</div>`;
+function scr_s_lib(){
+ const feats=[
+  ['s_chat',I.chat,'Asistent curs','Întreabă orice despre un curs','linear-gradient(135deg,#1E2761,#3CBEE1)'],
+  ['s_quiz',I.quiz,'Autoevaluare','Generează un test pe curs','linear-gradient(135deg,#1E5C57,#4FB6A8)'],
+  ['s_sim',I.sim,'Simulare profesională','Pune în practică ce ai învățat','linear-gradient(135deg,#3A2E5C,#8E7CC3)'],
+  ['s_escape',I.lock,'Escape Room','Învață jucând, contra cronometru','linear-gradient(135deg,#7A2E3B,#E0707E)'],
+ ];
+ const srch='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>';
+ return `<div class="phead"><div class="eyebrow">Platformă de învățare</div><h1>Cursurile mele</h1>
+   <p>Alege un curs și învață cu asistentul AI, testează-te sau joacă — totul construit pe materialele cursului.</p></div>
+ <div class="home-search">${srch}<input placeholder="Caută un curs după nume…" oninput="filterCourses(this.value)"></div>
+ <div class="featrow">${feats.map(ff=>`<div class="featcard" style="background:${ff[4]}" onclick="go('${ff[0]}')"><div class="fi">${ff[1]}</div><b>${ff[2]}</b><span>${ff[3]}</span></div>`).join('')}</div>
+ <div class="sectitle">Cursurile tale <span class="cnt">${COURSES.length} cursuri</span></div>
+ <div class="coursegrid" id="coursegrid">${COURSES.map(courseCard).join('')}</div>
+ <div class="nores" id="nores" style="display:none">Niciun curs găsit. Încearcă alt termen.</div>`;
 }
+function courseCard(c){return `<div class="card course" data-name="${c.name.toLowerCase()}" onclick="activeCourse='${c.id}';go('s_chat')">
+   <div class="top" style="background:linear-gradient(120deg,${c.c1},${c.c2})"><span class="tag">${c.tag}</span>${I.book}</div>
+   <div class="bd"><h3>${c.name}</h3><div class="desc">${c.description||''}</div>
+   <div class="bar"><i style="width:${c.progress}%"></i></div><div class="pc">${c.progress}% parcurs</div></div></div>`;}
+function filterCourses(q){q=(q||'').toLowerCase().trim();let any=false;
+ document.querySelectorAll('#coursegrid .course').forEach(el=>{const m=el.dataset.name.includes(q);el.style.display=m?'':'none';if(m)any=true;});
+ const nr=document.getElementById('nores');if(nr)nr.style.display=any?'none':'block';}
 
 /* ===== STUDENT: QUIZ ===== */
-let qi=0;
+let QZ={items:[],type:'single',n:5,topic:''};
+function quizTypeInstr(t){return {single:'grilă cu un singur răspuns corect',multi:'grilă cu unul sau mai multe răspunsuri corecte',open:'întrebări cu răspuns liber (text)',mixed:'amestec de grilă (un răspuns), grilă (răspunsuri multiple) și răspuns liber'}[t]||'grilă cu un singur răspuns corect';}
+function pickQzType(el,t){el.parentNode.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');QZ.type=t;}
+function syncQz(){const n=document.getElementById('qzN'),tp=document.getElementById('qzTopic'),cs=document.getElementById('qzCourse');if(cs)activeCourse=cs.value;if(n)QZ.n=Math.max(1,Math.min(10,+n.value||5));if(tp)QZ.topic=tp.value.trim();}
 function scr_s_quiz(){
- if(qi>=QUIZ.length)return `<div class="phead"><div class="eyebrow">Autoevaluare</div><h1>Test finalizat</h1></div><div class="card quiz" style="text-align:center"><div style="font-size:44px">🎉</div><h2 style="font-family:var(--font-d);color:var(--navy);margin:8px 0">Bravo!</h2><p style="color:var(--muted)">Ai parcurs toate întrebările generate din materialul cursului.</p><button class="btn-cyan" style="margin-top:16px" onclick="qi=0;renderMain()">Reia testul</button></div>`;
- const q=QUIZ[qi];const src=MICRO.find(m=>m.id===q.src);
- return `<div class="phead"><div class="eyebrow">Autoevaluare · Microeconomie</div><h1>Test de înțelegere</h1>
-  <p>Întrebări generate din materialul cursului. Răspunde și primești explicații imediate, cu trimitere la sursă.</p></div>
- <div class="card quiz"><div class="qnum">Întrebarea ${qi+1} din ${QUIZ.length}</div><div class="qq">${q.q}</div>
-  <div id="opts">${q.o.map((o,i)=>`<div class="opt" onclick="answerQuiz(${i})"><span class="mk">${'ABCD'[i]}</span>${o}</div>`).join('')}</div>
-  <div class="quizfb" id="qfb"></div>
-  <button class="btn-cyan" id="qnext" style="display:none;margin-top:14px" onclick="qi++;renderMain()">Următoarea întrebare →</button>
-  <div style="margin-top:14px"><span class="cite" onclick='showSrc(${JSON.stringify({title:src.title,ref:src.ref,content:src.content})})'>${I.link} ${src.ref} — revezi explicația</span></div></div>`;
+ const types=[['single','Grilă · un răspuns'],['multi','Grilă · răspunsuri multiple'],['open','Răspuns liber'],['mixed','Mixt']];
+ return `<div class="phead"><div class="eyebrow">Autoevaluare</div><h1>Generează un test pe curs</h1>
+   <p>Alege cursul, tipul de evaluare și, opțional, o temă. Testul e construit din materialele cursului${isLive()?'':' (mod demo)'}.</p></div>
+ <div class="qzwrap">
+   <div class="card qzform">
+     <div class="fld"><label>Curs</label><select id="qzCourse">${COURSES.map(x=>`<option value="${x.id}" ${x.id===activeCourse?'selected':''}>${x.name}</option>`).join('')}</select></div>
+     <div class="fld"><label>Tip de evaluare</label><div class="chips">${types.map(t=>`<span class="chip ${t[0]===QZ.type?'on':''}" onclick="pickQzType(this,'${t[0]}')">${t[1]}</span>`).join('')}</div></div>
+     <div class="fld"><label>Număr de întrebări</label><input id="qzN" type="number" min="1" max="10" value="${QZ.n}"></div>
+     <div class="fld"><label>Temă / focus (opțional)</label><input id="qzTopic" placeholder="ex: elasticitate, echilibru…" value="${QZ.topic}"></div>
+     <button class="genbtn" onclick="genQuiz()">${I.wand} Generează testul</button>
+   </div>
+   <div class="card qzout" id="qzout">${QZ.items.length?QZ.items.map(quizItem).join(''):`<div class="qz-empty"><div class="ph">${I.quiz.replace(/currentColor/g,'#cfd9ec')}<p>Configurează în stânga și apasă „Generează testul”. Întrebările apar aici, cu verificare și explicații.</p></div></div>`}</div>
+ </div>`;
 }
-function answerQuiz(i){const q=QUIZ[qi];const opts=document.querySelectorAll('#opts .opt');
- opts.forEach((o,k)=>{o.style.pointerEvents='none';if(k===q.c)o.classList.add('correct');if(k===i&&i!==q.c)o.classList.add('wrong')});
- const fb=document.getElementById('qfb');fb.classList.add('show');fb.innerHTML=`<b>${i===q.c?'✓ Corect.':'✗ Nu chiar.'}</b> ${q.e}`;
- document.getElementById('qnext').style.display='inline-flex';
+function quizItem(it,idx){
+ if(it.type==='open')return `<div class="qzitem" data-i="${idx}"><div class="qzq">${idx+1}. ${it.q}</div><textarea placeholder="Scrie răspunsul tău…"></textarea><button class="qzcheck" onclick="checkItem(${idx})">Verifică răspunsul</button><div class="qzfb" id="fb${idx}"></div></div>`;
+ const inp=it.type==='multi'?'checkbox':'radio';
+ return `<div class="qzitem" data-i="${idx}"><div class="qzq">${idx+1}. ${it.q} ${it.type==='multi'?'<span style="font-size:11px;color:var(--muted);font-weight:600">(unul sau mai multe)</span>':''}</div>
+   <div class="qzopts">${(it.options||[]).map((o,i)=>`<label class="qzopt"><input type="${inp}" name="q${idx}" value="${i}"><span>${o}</span></label>`).join('')}</div>
+   <button class="qzcheck" onclick="checkItem(${idx})">Verifică</button><div class="qzfb" id="fb${idx}"></div></div>`;
+}
+async function genQuiz(){
+ syncQz();const out=document.getElementById('qzout');
+ out.innerHTML='<div class="skel" style="width:48%;height:16px"></div><div class="skel"></div><div class="skel" style="width:90%"></div><div class="skel" style="width:75%"></div><div class="skel" style="width:85%"></div>';
+ const c=COURSES.find(x=>x.id===activeCourse)||COURSES[0];const ctx=c.materials.map(m=>`${m.title}: ${m.content}`).join('\n');
+ try{
+   if(isLive()){
+     const sys=`Ești asistent educațional. Generează un test de autoevaluare pentru cursul „${c.name}", bazat EXCLUSIV pe materialele de mai jos.${QZ.topic?(' Concentrează-te pe tema: '+QZ.topic+'.'):''} Tip: ${quizTypeInstr(QZ.type)}. Generează ${QZ.n} întrebări. Răspunde STRICT cu JSON: un array de obiecte, fără text în afara JSON. Pentru un răspuns: {"type":"single","q":"...","options":["...","...","..."],"correct":<index>,"explain":"..."}. Pentru răspunsuri multiple: {"type":"multi","q":"...","options":["..."],"correct":[<index>,...],"explain":"..."}. Pentru răspuns liber: {"type":"open","q":"...","model":"răspuns orientativ scurt"}. În română.
+
+Materiale:
+${ctx}`;
+     const raw=await callAzure([{role:'system',content:sys},{role:'user',content:'Generează testul în format JSON.'}],1500);
+     QZ.items=JSON.parse(raw.replace(/```json|```/g,'').trim());
+   }else{QZ.items=sampleQuiz(c,QZ.type,QZ.n);}
+ }catch(e){QZ.items=sampleQuiz(c,QZ.type,QZ.n);}
+ renderMain();
+}
+function sampleQuiz(c,type,n){
+ if(c.id==='micro'&&type==='single'&&typeof QUIZ!=='undefined'){return QUIZ.map(q=>({type:'single',q:q.q,options:q.o,correct:q.c,explain:q.e})).slice(0,n);}
+ const mats=c.materials,out=[];
+ for(let i=0;i<n;i++){const m=mats[i%mats.length],other=mats[(i+1)%mats.length];
+   let t=type==='mixed'?['single','multi','open'][i%3]:type;
+   if(t==='open')out.push({type:'open',q:`Explică pe scurt noțiunea „${m.title}”.`,model:m.content});
+   else if(t==='multi')out.push({type:'multi',q:`Care afirmații despre „${m.title}” sunt corecte?`,options:[m.content.split('. ')[0]+'.',other.content.split('. ')[0]+'.','Niciuna dintre acestea'],correct:[0],explain:m.content});
+   else out.push({type:'single',q:`Ce descrie cel mai bine noțiunea „${m.title}”?`,options:[m.content.split('. ')[0]+'.',other.content.split('. ')[0]+'.','Niciuna dintre acestea'],correct:0,explain:m.content});
+ }
+ return out;
+}
+async function checkItem(idx){
+ const it=QZ.items[idx];const root=document.querySelector(`.qzitem[data-i="${idx}"]`);const fb=document.getElementById('fb'+idx);
+ if(it.type==='open'){const ta=root.querySelector('textarea');const ans=(ta.value||'').trim();fb.className='qzfb show';
+   if(!ans){fb.innerHTML='Scrie un răspuns mai întâi.';return;}
+   fb.innerHTML='Se evaluează…';
+   if(isLive()){try{const t=await callAzure([{role:'system',content:`Ești profesor. Evaluează scurt (2-3 propoziții, română) răspunsul studentului față de răspunsul orientativ. Spune ce e bun și ce ar putea adăuga.
+Întrebare: ${it.q}
+Răspuns orientativ: ${it.model}`},{role:'user',content:ans}],400);fb.innerHTML='<b>Feedback:</b> '+t;}catch(e){fb.innerHTML='<b>Răspuns orientativ:</b> '+it.model;}}
+   else{fb.innerHTML='<b>Răspuns orientativ:</b> '+it.model;}
+   return;
+ }
+ const labels=[...root.querySelectorAll('.qzopt')];const sel=[];
+ root.querySelectorAll('input').forEach((el,i)=>{if(el.checked)sel.push(i);});
+ const correct=it.type==='multi'?(it.correct||[]):[it.correct];
+ labels.forEach((l,i)=>{l.classList.remove('correct','wrong');if(correct.includes(i))l.classList.add('correct');else if(sel.includes(i))l.classList.add('wrong');});
+ const ok=sel.length===correct.length&&sel.every(i=>correct.includes(i));
+ fb.className='qzfb show';fb.innerHTML=`<b>${ok?'✓ Corect.':'✗ Nu chiar.'}</b> ${it.explain||''}`;
 }
 
 /* ===== STUDENT: SIMULATION ===== */
