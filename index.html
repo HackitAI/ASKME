@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -885,7 +886,7 @@ function scr_f_dash(){return `<div class="phead"><div class="eyebrow">Panou pent
    <button class="btn-cyan" style="width:100%;justify-content:flex-start;margin-top:10px" onclick="go('f_gen')">${I.wand} Generează material de curs</button>
    <button class="btn-cyan" style="width:100%;justify-content:flex-start;margin-top:10px;background:var(--navy);color:#fff" onclick="go('f_cohort')">${I.chart} Vezi analiza pe grupă</button></div>
  <div class="card" style="padding:18px"><b style="color:var(--text);font-family:var(--font-d)">Cursurile mele</b><div style="margin-top:14px">
-   ${COURSES.slice(0,5).map((c,i)=>{const cnt=[142,98,76,120,64,88,54][i]||50;return `<div class="srcitem" onclick="go('f_cohort')"><div class="ic" style="background:linear-gradient(120deg,${c.c1},${c.c2})">${I.book.replace(/currentColor/g,'#fff')}</div><div style="flex:1"><div class="tt">${c.name}</div><div class="mm">${cnt} studenți</div></div></div>`;}).join('')}</div></div></div>`;
+   ${COURSES.slice(0,5).map((c,i)=>{const cnt=[142,98,76,120,64,88,54][i]||50;return `<div class="srcitem" style="cursor:pointer" onclick="openManage('${c.id}')"><div class="ic" style="background:linear-gradient(120deg,${c.c1},${c.c2})">${I.book.replace(/currentColor/g,'#fff')}</div><div style="flex:1"><div class="tt">${c.name}</div><div class="mm">${cnt} studenți</div></div></div>`;}).join('')}</div></div></div>`;
 }
 
 /* ===== FACULTY: ADD COURSE ===== */
