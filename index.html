@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -387,6 +386,7 @@ button{font-family:inherit;cursor:pointer}
 .card.stat .v{background:linear-gradient(120deg,var(--navy),var(--cyan-dk));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .eropt,.qzopt{transition:.16s}
 .featcard:hover{transform:translateY(-3px) scale(1.01)}
+.toggle.lang button{min-width:40px;justify-content:center;font-weight:700}
 </style>
 </head>
 <body>
@@ -398,6 +398,10 @@ button{font-family:inherit;cursor:pointer}
     <div class="toggle">
       <button id="tStudent" class="active" onclick="setRole('student')"><span class="dot"></span>Student</button>
       <button id="tFaculty" onclick="setRole('faculty')"><span class="dot"></span>Profesor</button>
+    </div>
+    <div class="toggle lang">
+      <button id="tRo" class="active" onclick="setLang('ro')">RO</button>
+      <button id="tEn" onclick="setLang('en')">EN</button>
     </div>
     <button class="cfgbtn" id="cfgBtn" onclick="openCfg()"><span class="sdot"></span>Azure OpenAI</button>
     <div class="userchip"><span id="uname">Andrei P.</span><span class="uava" id="uava">AP</span></div>
@@ -527,7 +531,9 @@ function saveCfg(){cfg={endpoint:cfgEndpoint.value.trim(),deploy:cfgDeploy.value
 function showSrc(s){srcTitle.textContent=s.title;srcRef.textContent=s.ref;srcBody.textContent=s.content;srcModal.classList.add('show')}
 
 /* ===== AZURE ===== */
+let LANG='ro';
 async function callAzure(messages,max){
+ if(LANG==='en'){messages=messages.map(m=>m.role==='system'?{role:'system',content:m.content+'\n\nIMPORTANT: Respond ONLY in English, regardless of the language of the course materials or the question.'}:m);}
  const payload=JSON.stringify({messages,max_completion_tokens:max||800});
  let url,headers={'Content-Type':'application/json'};
  if(cfg.endpoint){url=`${cfg.endpoint.replace(/\/$/,'')}/openai/deployments/${cfg.deploy}/chat/completions?api-version=${cfg.ver}`;headers['api-key']=cfg.key;}
@@ -539,7 +545,7 @@ async function callAzure(messages,max){
 const STOP=new Set(['ce','este','sunt','un','o','de','la','si','și','in','în','cum','se','care','ale','pe','cu','al','a','pentru','curs','cursul','cursului','curse','acest','aceasta','acestui','acestei','material','materialul','materiale','materialele','despre','idei','principale','principala','rezuma','rezumat','rezuma','voi','vei','invata','invat','invatam','catva','cateva','prezinta','continut','continutul','noua','ne','mi','imi','spune','vreau']);
 function tok(t){return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(w=>w.length>2&&!STOP.has(w))}
 function retrieve(q,mats,k){const qt=tok(q);return mats.map(m=>{const mt=tok(m.title+' '+m.content);let s=0;qt.forEach(w=>{if(mt.includes(w))s+=2;else if(mt.some(x=>x.startsWith(w.slice(0,4))))s+=1});return{m,s}}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,k||3)}
-function isSummaryQ(q){return /rezum|ce voi (înv|inv)|despre ce|(fapte|no[țt]iuni|concepte|puncte|idei)[ -]?(cheie|princip|esen)|structur|introducere|prezint|ce (înv|inv)|continut|conțin|explic.*(pe larg|conceptul principal)/i.test((q||'').toLowerCase());}
+function isSummaryQ(q){return /rezum|ce voi (înv|inv)|despre ce|(fapte|no[țt]iuni|concepte|puncte|idei)[ -]?(cheie|princip|esen)|structur|introducere|prezint|ce (înv|inv)|continut|conțin|explic.*(pe larg|conceptul principal)|summar|overview|what (will|am) i|key (facts|points|concepts|notions|takeaways|ideas)|main (ideas|points|concepts|topics)|recap|outline of/i.test((q||'').toLowerCase());}
 function spreadChunks(mats,n){const pool=mats.length>4?mats.slice(1):mats;if(pool.length<=n)return pool.slice();const step=pool.length/n;const out=[];for(let i=0;i<n;i++)out.push(pool[Math.floor(i*step)]);return out;}
 function buildContext(q,mats){if(!mats||!mats.length)return [];
  if(isSummaryQ(q))return mats.slice(0,48); // whole-course questions: feed (almost) all content, like the quiz does
@@ -562,8 +568,122 @@ function renderSide(){
   `<div class="seclabel">${role==='student'?'Învățare':'Predare'}</div>`+
   items.map(n=>`<div class="nav ${n.id===current?'active':''}" onclick="go('${n.id}')">${n.icon}<span>${n.label}</span></div>`).join('')+
   `<div class="grow"></div><div class="tip"><b>${role==='student'?'Sfat':'Știați că'}</b>${role==='student'?'Apasă „vezi sursa” în orice răspuns pentru a deschide pagina exactă din curs.':'Materialele de curs pe care le încarci antrenează automat asistentul și generatorul de conținut.'}</div>`;
+ translateUI();
 }
-function renderMain(){document.getElementById('main').innerHTML=SCREENS[current]();if(current==='s_chat')scrollChat();if(current==='f_assist')scrollTChat()}
+const DICT={
+ // sidebar
+ 'Învățare':'Learning','Predare':'Teaching','Sfat':'Tip','Știați că':'Did you know',
+ 'Apasă „vezi sursa” în orice răspuns pentru a deschide pagina exactă din curs.':'Click “view source” in any answer to open the exact course page.',
+ 'Materialele de curs pe care le încarci antrenează automat asistentul și generatorul de conținut.':'The course materials you upload automatically train the assistant and the content generator.',
+ // nav
+ 'Cursurile mele':'My courses','Asistent curs':'Course assistant','Autoevaluare':'Self-assessment','Simulare profesională':'Professional simulation','Progresul meu':'My progress',
+ 'Panou de bord':'Dashboard','Adaugă curs':'Add course','Gestionează cursuri':'Manage courses','Generare conținut':'Content generation','Analiză grupă':'Cohort analytics','Asistent didactic':'Teaching assistant',
+ // eyebrows
+ 'Platformă de învățare':'Learning platform','Asistent personal de învățare':'Personal learning assistant','Asistent pentru cadre didactice':'Assistant for educators','Panou pentru cadre didactice':'Educator dashboard','Predare · administrare':'Teaching · administration',
+ // student library
+ 'Alege un curs și învață cu asistentul AI, testează-te sau joacă — totul construit pe materialele cursului.':'Choose a course and learn with the AI assistant, test yourself, or play — all built on the course materials.',
+ 'Întreabă orice despre un curs':'Ask anything about a course','Generează un test pe curs':'Generate a course quiz','Pune în practică ce ai învățat':'Apply what you learned','Învață jucând, contra cronometru':'Learn by playing, against the clock',
+ 'Caută un curs…':'Search a course…','Caută un curs...':'Search a course...',
+ // chat
+ 'Alege un curs și pune întrebări — răspunsurile sunt construite pe materialele cursului.':'Choose a course and ask questions — answers are built on the course materials.',
+ 'Curs':'Course','conectat la materialele cursului':'connected to course materials','Asistent':'Assistant',
+ 'Surse din acest curs':'Sources from this course','Întrebări rapide':'Quick questions','Comenzi utile':'Useful commands',
+ '💡 Încearcă să întrebi':'💡 Try asking',
+ 'Rezumă cursul':'Summarize the course','Ce voi învăța aici?':'What will I learn here?','Noțiuni-cheie':'Key concepts','Fă-mi un test scurt':'Make me a short quiz','Explică conceptul principal':'Explain the main concept','Un exemplu practic':'A practical example',
+ 'Scrie o întrebare despre curs…':'Ask a question about the course…','Scrie o întrebare despre curs...':'Ask a question about the course...',
+ // quiz
+ 'Generează un test grilă, cu răspuns multiplu sau întrebări deschise — corectat automat, cu explicații.':'Generate a multiple-choice, multi-answer or open-question quiz — auto-graded, with explanations.',
+ 'Tip de evaluare':'Assessment type','Număr de întrebări':'Number of questions','Temă / focus (opțional)':'Topic / focus (optional)','Generează testul':'Generate quiz','Regenerează testul':'Regenerate quiz',
+ 'Răspuns unic':'Single answer','Răspuns multiplu':'Multiple answers','Răspuns liber':'Open answer','Mixt':'Mixed',
+ 'Configurează în stânga și apasă „Generează testul”. Întrebările apar aici, cu verificare și explicații.':'Configure on the left and press “Generate quiz”. Questions appear here, with checking and explanations.',
+ 'Verifică':'Check','Verifică răspunsul':'Check answer','Corect!':'Correct!','Răspuns corect':'Correct answer','Mai încearcă':'Try again','Explicație':'Explanation','Răspuns orientativ':'Model answer',
+ // simulation
+ 'Aplică ce ai învățat într-un scenariu realist din domeniul cursului, cu feedback pe deciziile tale.':'Apply what you learned in a realistic scenario from the course domain, with feedback on your decisions.',
+ 'Generează scenariul':'Generate scenario','Regenerează':'Regenerate','Regenerează scenariul':'Regenerate scenario','Obiective':'Objectives','Răspunsul tău':'Your response','Trimite răspunsul':'Submit response','Indiciu':'Hint','Cere un indiciu':'Ask for a hint','Context':'Context','Etape':'Stages',
+ 'Scrie-ți analiza și deciziile aici…':'Write your analysis and decisions here…',
+ // escape room
+ 'Rezolvă provocările bazate pe curs ca să deblochezi camerele și să obții codul de ieșire — contra cronometru.':'Solve course-based challenges to unlock the rooms and get the exit code — against the clock.',
+ 'Generează camerele':'Generate rooms','Povestea camerei':'Room story','Ce trebuie să faci':'What you need to do','Răspunsul tău argumentat':'Your reasoned answer','Verifică și deblochează':'Check and unlock','Continuă':'Continue','Progresul tău':'Your progress','Starea provocărilor':'Challenge status','Cod de ieșire':'Exit code','Detalii':'Details','Reguli':'Rules','Indiciu':'Hint',
+ 'Scrie-ți răspunsul și argumentează…':'Write your answer and justify it…',
+ // progress
+ 'Urmărește-ți parcursul pe fiecare curs și reia de unde ai rămas.':'Track your progress on each course and pick up where you left off.',
+ // faculty dashboard
+ 'Bună, Prof. Ionescu':'Hello, Prof. Ionescu',
+ 'Generează materiale din cursurile tale, urmărește progresul grupelor și economisește timp la sarcinile repetitive de predare.':'Generate materials from your courses, track cohort progress, and save time on repetitive teaching tasks.',
+ 'Cursuri active':'Active courses','Materiale generate':'Generated materials','Progres mediu grupe':'Average cohort progress',
+ 'peste 300 studenți în total':'over 300 students in total','teste, laboratoare, fișe':'quizzes, labs, worksheets','+6% față de luna trecută':'+6% vs last month',
+ 'Acțiuni rapide':'Quick actions','Adaugă un curs':'Add a course','Generează material de curs':'Generate course material','Vezi analiza pe grupă':'View cohort analytics',
+ 'Recomandare: grupa întâmpină dificultăți la':'Recommendation: the cohort is struggling with',
+ '34% din răspunsuri greșite sunt pe acest subiect. Generează o fișă de recapitulare sau un test țintit în câteva secunde.':'34% of wrong answers are on this topic. Generate a recap sheet or a targeted quiz in seconds.',
+ // add course
+ 'Creează un curs nou: nume, descriere și conținut. Studenții îl primesc imediat în toate instrumentele — asistent, autoevaluare, simulare, escape room.':'Create a new course: name, description and content. Students get it instantly across all tools — assistant, self-assessment, simulation, escape room.',
+ 'Nume curs':'Course name','Disciplină':'Discipline','Descriere scurtă':'Short description','Fișier PDF':'PDF file','Adaugă cursul':'Add course','Alege un PDF…':'Choose a PDF…','Alege un PDF...':'Choose a PDF...',
+ 'Cursuri existente':'Existing courses','O frază despre curs (apare pe card)':'A sentence about the course (shown on the card)',
+ 'Cursurile adăugate persistă și apar pentru toți studenții. Un PDF încărcat este procesat automat: textul devine „materiale” pe care se construiesc asistentul, testele, simularea și escape room-ul.':'Added courses persist and appear for all students. An uploaded PDF is processed automatically: the text becomes “materials” the assistant, quizzes, simulation and escape room are built on.',
+ 'Lipește notițele / textul cursului (sau încarcă un PDF mai jos). Separă secțiunile printr-un rând gol.':'Paste the course notes / text (or upload a PDF below). Separate sections with a blank line.',
+ // manage
+ 'Editează numele, disciplina și descrierea, adaugă conținut sau un PDF, ori șterge cursuri. Modificările apar imediat pentru studenți.':'Edit the name, discipline and description, add content or a PDF, or delete courses. Changes appear immediately for students.',
+ 'Editează cursul':'Edit course','salvat':'saved','demo · în memorie':'demo · in-memory','Salvează modificările':'Save changes','Șterge':'Delete','Adaugă conținut text':'Add text content','Adaugă PDF':'Add PDF',
+ 'Niciun curs încă. Adaugă unul din „Adaugă curs”.':'No courses yet. Add one from “Add course”.',
+ 'Lipește text suplimentar de curs (secțiuni separate prin rând gol)…':'Paste additional course text (sections separated by a blank line)…',
+ // generator
+ 'Generare conținut educațional':'Educational content generation',
+ 'Tip material':'Material type','Temă / capitol':'Topic / chapter','Nivel':'Level','Număr de itemi':'Number of items','Generează material':'Generate material',
+ 'Test grilă':'Multiple-choice quiz','Laborator':'Lab','Fișă de lucru':'Worksheet','Examen':'Exam','Plan de lecție':'Lesson plan','Barem':'Grading scheme',
+ 'Mediu':'Medium','Începător':'Beginner','Avansat':'Advanced',
+ 'Previzualizare material':'Material preview','Vezi ca student':'View as student','Copiază':'Copy','Export':'Export',
+ 'Completează formularul și apasă „Generează material”. Conținutul apare aici, gata de revizuit și editat.':'Fill in the form and press “Generate material”. The content appears here, ready to review and edit.',
+ // cohort
+ 'Progresul studenților':'Student progress','Student':'Student','Progres':'Progress','Stadiu':'Stage','Acțiune':'Action','material de sprijin':'support material',
+ 'Vizibilitate asupra parcursului fiecărui student și a temelor unde grupa întâmpină dificultăți.':'Visibility into each student’s journey and the topics where the cohort struggles.',
+ 'Progres mediu grupă':'Average cohort progress','Temă cu dificultate':'Difficult topic','Au nevoie de sprijin':'Need support','studenți înscriși':'enrolled students','din răspunsuri greșite':'of wrong answers','sub 40% progres':'under 40% progress',
+ 'Bun':'Good','Foarte bun':'Very good','În progres':'In progress','Necesită sprijin':'Needs support',
+ // teaching assistant
+ 'Un coleg AI pentru sarcinile zilnice: întrebări de examen, recapitulări, idei de activități, formulări de feedback.':'An AI colleague for daily tasks: exam questions, recaps, activity ideas, feedback wording.',
+ 'Asistentul răspunde pe baza materialelor cursului selectat.':'The assistant answers based on the selected course materials.',
+ '3 întrebări grilă':'3 multiple-choice questions','Sumarizează un capitol':'Summarize a chapter','Idee de activitate':'Activity idea','Schiță de barem':'Grading scheme draft',
+ 'Ex: creează 3 întrebări despre…':'E.g., create 3 questions about…','Ex: creează 3 întrebări despre...':'E.g., create 3 questions about...',
+ // misc
+ 'mod demo':'demo mode','(mod demo)':'(demo mode)','Niciun curs.':'No courses.',
+ 'Salut! Sunt asistentul tău didactic. Cere-mi să creez întrebări, să sumarizez un capitol, să propun idei de laborator sau să schițez un barem — pe baza cursului selectat.':'Hi! I\u2019m your teaching assistant. Ask me to create questions, summarize a chapter, propose lab ideas or draft a grading scheme \u2014 based on the selected course.',
+ 'Creează teste, laboratoare, fișe de lucru, examene, planuri de lecție și bareme — construite pe materialele tale, cu AI generativ.':'Create quizzes, labs, worksheets, exams, lesson plans and grading schemes \u2014 built on your materials, with generative AI.',
+ 'Creează teste, laboratoare, fișe de lucru, examene, planuri de lecție și bareme — construite pe materialele tale (mod demo).':'Create quizzes, labs, worksheets, exams, lesson plans and grading schemes \u2014 built on your materials (demo mode).',
+ 'Cursurile tale':'Your courses','Caută un curs după nume…':'Search a course by name…','Caută un curs după nume...':'Search a course by name...',
+ 'Grilă · un răspuns':'Single-choice','Grilă · răspunsuri multiple':'Multiple-choice',
+ 'Alege cursul, tipul de evaluare și, opțional, o temă. Testul e construit din materialele cursului.':'Choose the course, the assessment type and, optionally, a topic. The quiz is built from the course materials.',
+ 'ex: elasticitate, echilibru…':'e.g., elasticity, equilibrium…','ex: elasticitate, echilibru...':'e.g., elasticity, equilibrium...',
+ 'Generează testul':'Generate quiz','Generează un test pe curs':'Generate a course quiz',
+ 'Conținutul cursului':'Course content','— text, antrenează asistentul acum':'— text, trains the assistant now',
+ '— opțional, textul se extrage automat':'— optional, text extracted automatically','— opțional, se adaugă la materiale':'— optional, added to materials',
+ '— opțional, se adaugă la materiale.':'— optional, added to materials.'
+};
+const PHRASES=[
+ [/^Toate cursurile \((\d+)\)$/,'All courses ($1)'],
+ [/(\d+)\s+materiale în acest curs/g,'$1 materials in this course'],
+ [/(\d+)\s+studenți/g,'$1 students'],[/(\d+)\s+materiale/g,'$1 materials'],[/(\d+)\s+pagini/g,'$1 pages'],[/(\d+)\s+itemi/g,'$1 items'],[/(\d+)\s+cursuri/g,'$1 courses'],[/(\d+)%\s+parcurs/g,'$1% complete'],
+ [/materiale în acest curs/g,'materials in this course'],
+ [/^Asistent didactic · /,'Teaching assistant · '],[/^Asistent · /,'Assistant · '],
+ [/conectat la materialele cursului/g,'connected to course materials'],
+ [/^Salut! Sunt asistentul cursului de (.+?)\. Întreabă-mă orice — răspund din materialele încărcate de profesor\.$/,'Hi! I\u2019m the assistant for the $1 course. Ask me anything \u2014 I answer from the materials uploaded by your teacher.']
+];
+function trText(raw){const k=raw.trim();if(!k)return null;if(DICT[k])return raw.replace(k,DICT[k]);let o=k;PHRASES.forEach(function(p){o=o.replace(p[0],p[1]);});return o!==k?raw.replace(k,o):null;}
+function translateUI(){
+ if(LANG!=='en')return;
+ ['side','main'].forEach(id=>{const root=document.getElementById(id);if(!root)return;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null);const nodes=[];while(w.nextNode())nodes.push(w.currentNode);
+  nodes.forEach(n=>{const t=trText(n.nodeValue);if(t!==null)n.nodeValue=t;});
+  root.querySelectorAll('[placeholder]').forEach(el=>{const p=el.getAttribute('placeholder');if(p&&DICT[p.trim()])el.setAttribute('placeholder',DICT[p.trim()]);});
+ });
+}
+function setLang(l){LANG=l;
+ if(window.tRo)tRo.classList.toggle('active',l==='ro');if(window.tEn)tEn.classList.toggle('active',l==='en');
+ const ctx=document.querySelector('.brand .ctx');if(ctx)ctx.innerHTML=l==='en'?'<b>AI Learning Platform</b>Assistant trained on your courses':'<b>Platformă de învățare AI</b>Asistent antrenat pe cursurile tale';
+ if(window.tFaculty&&tFaculty.lastChild)tFaculty.lastChild.textContent=l==='en'?'Teacher':'Profesor';
+ const hint=document.querySelector('.hint');if(hint)hint.innerHTML=l==='en'?'<span class="dotg"></span>Interactive demo — switch <b>Student / Teacher</b> and use the side menu':'<span class="dotg"></span>Demo interactiv — comută <b>Student / Profesor</b> și navighează în meniul lateral';
+ const cfg=document.getElementById('cfgBtn');if(cfg)cfg.title=l==='en'?'Azure OpenAI connection':'Conectare Azure OpenAI';
+ renderSide();renderMain();
+}
+function renderMain(){document.getElementById('main').innerHTML=SCREENS[current]();translateUI();if(current==='s_chat')scrollChat();if(current==='f_assist')scrollTChat()}
 function go(id){
  if(NAV.student.some(n=>n.id===id)&&role!=='student')_setRole('student');
  if(NAV.faculty.some(n=>n.id===id)&&role!=='faculty')_setRole('faculty');
@@ -981,14 +1101,14 @@ async function deleteManage(){const c=COURSES.find(x=>x.id===MANAGE.sel);if(!c)r
 /* ===== FACULTY: GENERATOR ===== */
 let genType='Test grilă';
 let tCourse='';
-function pick(el){document.querySelectorAll('.chips .chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');genType=el.textContent}
+function pick(el){document.querySelectorAll('.chips .chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');genType=el.getAttribute('data-type')||el.textContent}
 function scr_f_gen(){return `<div class="phead"><div class="eyebrow">Asistent pentru cadre didactice</div><h1>Generare conținut educațional</h1>
   <p>Creează teste, laboratoare, fișe de lucru, examene, planuri de lecție și bareme — construite pe materialele tale${isLive()?', cu AI generativ':' (mod demo)'}.</p></div>
  <div class="genwrap">
   <div class="card genform">
    <div class="fld"><label>Curs</label><select id="genCourse">${COURSES.map(c=>`<option>${c.name}</option>`).join('')}</select></div>
    <div class="fld"><label>Tip material</label><div class="chips">
-     ${['Test grilă','Laborator','Fișă de lucru','Examen','Plan de lecție','Barem'].map((t,i)=>`<span class="chip ${i===0?'on':''}" onclick="pick(this)">${t}</span>`).join('')}</div></div>
+     ${['Test grilă','Laborator','Fișă de lucru','Examen','Plan de lecție','Barem'].map((t,i)=>`<span class="chip ${i===0?'on':''}" data-type="${t}" onclick="pick(this)">${t}</span>`).join('')}</div></div>
    <div class="fld"><label>Temă / capitol</label><input id="genTopic" value="Elasticitatea cererii"></div>
    <div class="fld"><label>Nivel</label><select id="genLevel"><option>Mediu</option><option>Începător</option><option>Avansat</option></select></div>
    <div class="fld"><label>Număr de itemi</label><input id="genN" value="5"></div>
