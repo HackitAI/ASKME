@@ -606,14 +606,15 @@ async function ask(preset){
      const sumMode=isSummaryQ(q);
      const sys=`Ești asistentul cursului de ${course().name}. Răspunzi EXCLUSIV pe baza fragmentelor de mai jos, extrase automat din materialele cursului (pot fi în dezordine sau parțiale — sintetizează între ele).
 - Concentrează-te pe CONȚINUTUL DE FOND: noțiuni, definiții, idei, fapte. Ignoră prefața, „cum se folosește", cuprinsul, drepturile de autor.
-- Pentru un REZUMAT: scrie 4–6 propoziții coerente despre subiectul real al cursului.
-- Pentru FAPTE-CHEIE: listează 5–8 puncte concise, fiecare pe câte un rând care începe cu „• ".
+- Pentru un REZUMAT: scrie un rezumat CUPRINZĂTOR și detaliat (mai multe paragrafe scurte, ~10–16 propoziții) care acoperă principalele teme, noțiunile-cheie și concluziile din materiale. Organizează logic și dă exemple din text unde ajută.
+- Pentru FAPTE-CHEIE: listează 10–18 puncte, fiecare pe câte un rând care începe cu „• ", acoperind cât mai mult din conținutul de fond (definiții, principii, relații importante).
+- Acoperă cât mai mult din materialele furnizate; nu te limita la primul fragment.
 - Dacă fragmentele conțin doar text administrativ/introductiv, spune clar că textul extras pare să fie doar partea introductivă și că nu ai destul conținut de fond — nu inventa și nu eticheta greșit subiectul.
-- Răspunde în română, clar și la obiect.
+- Răspunde în română, clar și bine structurat.
 
 Fragmente:
 ${ctxs}`;
-     ans=await callAzure([{role:'system',content:sys},{role:'user',content:q}], sumMode?1100:600);
+     ans=await callAzure([{role:'system',content:sys},{role:'user',content:q}], sumMode?2600:800);
    }else{ans=top?`${top.content.split('. ').slice(0,2).join('. ')}.`.replace('..','.'):'Acest subiect nu pare acoperit în materialele acestui curs.';}
  }catch(e){ans=(top?top.content.split('. ')[0]+'.':'Subiect neacoperit în materiale.')+' (apel eșuat)';}
  arr.push({role:'ai',text:ans,src:top?{title:top.title,ref:top.ref,content:top.content}:null});renderMain();
