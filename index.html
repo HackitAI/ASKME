@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -855,17 +854,25 @@ function scr_f_dash(){return `<div class="phead"><div class="eyebrow">Panou pent
 
 /* ===== FACULTY: ADD COURSE ===== */
 let NEWPDF=null, ADDED=null;
-function pickPdf(input){const fl=input.files&&input.files[0];if(!fl)return;NEWPDF={name:fl.name};const el=document.getElementById('pdfName');if(el)el.textContent=fl.name+' · se procesează în Faza 2';}
+function pickPdf(input){const fl=input.files&&input.files[0];if(!fl)return;NEWPDF=fl;const el=document.getElementById('pdfName');if(el)el.textContent=fl.name;}
 function ncVal(id){const e=document.getElementById(id);return e?e.value.trim():'';}
-function addCourse(){const name=ncVal('ncName');const msg=document.getElementById('ncMsg');
+function fileToB64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result));r.onerror=rej;r.readAsDataURL(file);});}
+async function loadCourses(){try{const r=await fetch('/api/courses');if(!r.ok)return;const arr=await r.json();if(Array.isArray(arr)){let add=0;arr.forEach(c=>{if(c&&c.id&&!COURSES.some(x=>x.id===c.id)){COURSES.push(c);add++;}});if(add)renderMain();}}catch(e){}}
+async function addCourse(){const name=ncVal('ncName');const msg=document.getElementById('ncMsg');
  if(!name){if(msg){msg.className='ncmsg err';msg.textContent='Adaugă cel puțin numele cursului.';}return;}
- const tag=ncVal('ncTag')||'General';const desc=ncVal('ncDesc');const text=ncVal('ncText');const id='c'+Date.now();
+ const tag=ncVal('ncTag')||'General';const desc=ncVal('ncDesc');const text=ncVal('ncText');
+ if(msg){msg.className='ncmsg';msg.textContent='Se procesează cursul…';}
+ let pdf=null;if(NEWPDF){try{pdf=await fileToB64(NEWPDF);}catch(e){}}
+ try{const r=await fetch('/api/upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,tag,description:desc,text,pdf})});
+   if(r.ok){const c=await r.json();if(c&&c.id){if(!COURSES.some(x=>x.id===c.id))COURSES.push(c);activeCourse=c.id;NEWPDF=null;ADDED=name;renderMain();return;}}
+ }catch(e){}
+ /* fallback: local in-memory (demo / no backend) */
+ const id='c'+Date.now();
  const palette=[['#1E2761','#3CBEE1'],['#26305C','#5B7FB9'],['#3A2E5C','#8E7CC3'],['#7A2E3B','#E0707E'],['#1E5C57','#4FB6A8'],['#14324A','#2BA3C4'],['#6B3E1E','#D9A05B']];
  const col=palette[COURSES.length % palette.length];
  let materials=text?text.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean).slice(0,12).map((p,i)=>({id:id+'_'+i,title:name+' — fragment '+(i+1),ref:'Material '+(i+1),content:p})):[];
  if(!materials.length)materials=[{id:id+'_0',title:name,ref:'Descriere',content:desc||('Conținutul cursului „'+name+'" va fi disponibil după procesarea PDF.')}];
- const docs=NEWPDF?[[NEWPDF.name,'PDF · încărcat']]:[['Material de curs','adăugat manual']];
- COURSES.push({id,name,tag,progress:0,c1:col[0],c2:col[1],description:desc||'Curs adăugat de profesor.',materials,docs});
+ COURSES.push({id,name,tag,progress:0,c1:col[0],c2:col[1],description:desc||'Curs adăugat de profesor.',materials,docs:NEWPDF?[[NEWPDF.name||'PDF','PDF']]:[['Material de curs','adăugat manual']]});
  activeCourse=id;NEWPDF=null;ADDED=name;renderMain();
 }
 function scr_f_upload(){
@@ -879,8 +886,8 @@ function scr_f_upload(){
    <div class="fld"><label>Disciplină</label><input id="ncTag" placeholder="ex: Inginerie"></div>
    <div class="fld"><label>Descriere scurtă</label><input id="ncDesc" placeholder="O frază despre curs (apare pe card)"></div>
    <div class="fld"><label>Conținutul cursului <span style="color:var(--muted);font-weight:500">— text, antrenează asistentul acum</span></label>
-     <textarea id="ncText" class="respbox" style="min-height:150px" placeholder="Lipește notițele / textul cursului. Separă secțiunile printr-un rând gol. În Faza 2, acest text va fi extras automat din PDF."></textarea></div>
-   <div class="fld"><label>Fișier PDF <span style="color:var(--muted);font-weight:500">— opțional, extragere în Faza 2</span></label>
+     <textarea id="ncText" class="respbox" style="min-height:150px" placeholder="Lipește notițele / textul cursului (sau încarcă un PDF mai jos). Separă secțiunile printr-un rând gol."></textarea></div>
+   <div class="fld"><label>Fișier PDF <span style="color:var(--muted);font-weight:500">— opțional, textul se extrage automat</span></label>
      <div class="pdfpick" onclick="document.getElementById('pdfInp').click()">${I.up}<span id="pdfName">Alege un PDF…</span></div>
      <input type="file" id="pdfInp" accept="application/pdf" style="display:none" onchange="pickPdf(this)"></div>
    <div class="ncmsg" id="ncMsg"></div>
@@ -888,7 +895,7 @@ function scr_f_upload(){
  </div>
  <div class="card ncside"><h3 style="font-family:var(--font-d);color:var(--navy);margin:0 0 12px;font-size:15px">Cursuri existente (${COURSES.length})</h3>
    ${COURSES.map(c=>`<div class="srcitem"><div class="ic" style="background:linear-gradient(120deg,${c.c1},${c.c2})">${I.book.replace(/currentColor/g,'#fff')}</div><div style="flex:1"><div class="tt">${c.name}</div><div class="mm">${c.tag} · ${c.materials.length} materiale</div></div></div>`).join('')}
-   <div style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5">Cursurile adăugate folosesc același model ca restul platformei — în Faza 2, încărcarea PDF completează automat „Conținutul cursului”.</div>
+   <div style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5">Cursurile adăugate persistă și apar pentru toți studenții. Un PDF încărcat este procesat automat: textul devine „materiale” pe care se construiesc asistentul, testele, simularea și escape room-ul.</div>
  </div></div>`;
 }
 
@@ -997,6 +1004,7 @@ async function loadConfig(){
  try{const r=await fetch("aoai-config.txt",{cache:"no-store"});if(r.ok){const o={};(await r.text()).split(/\r?\n/).forEach(l=>{const m=l.match(/^\s*(\w+)\s*=\s*(.+?)\s*$/);if(m)o[m[1].toLowerCase()]=m[2];});applyCfg({endpoint:o.endpoint,deploy:o.deploy||o.deployment,key:o.key,ver:o.ver||o.apiversion||o.api_version});}}catch(e){}
 }
 loadConfig();
+loadCourses();
 </script>
 </body>
 </html>
