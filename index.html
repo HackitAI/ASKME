@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -900,10 +901,12 @@ function simSubmit(){const r=document.getElementById('simResp').value.trim();SS.
 /* ===== STUDENT: ESCAPE ROOM (multi-room, course-driven) ===== */
 let ER={rooms:[],idx:0,hints:0,startTime:null,done:false,hint:'',fb:null,sel:-1,arg:'',code:[],busy:false};
 function sampleRooms(c){const m=c.materials;const n=Math.min(5,Math.max(3,m.length));const rooms=[];
- for(let i=0;i<n;i++){const ans=m[i%m.length];const ds=[m[(i+1)%m.length],m[(i+2)%m.length]];
-   let opts=[{label:ans.title,desc:ans.content.split('. ')[0]+'.'}];
-   ds.forEach(d=>opts.push({label:d.title,desc:d.content.split('. ')[0]+'.'}));
-   opts.push({label:'Niciuna dintre acestea',desc:'Nicio variantă nu corespunde indiciului de pe panou.'});
+ for(let i=0;i<n;i++){const ans=m[i%m.length];
+   const sent=x=>{const s=(x.content||'').split('. ')[0].trim();return s?(s.replace(/\.$/,'')+'.'):x.title;};
+   const correct=sent(ans);
+   const pool=[...new Set(m.filter((_,j)=>j!==(i%m.length)).map(sent))].filter(s=>s&&s!==correct);
+   let opts=[correct]; for(let k=0;k<2&&k<pool.length;k++)opts.push(pool[k]);
+   opts.push('Niciuna dintre variantele de mai sus'); opts=[...new Set(opts)];
    const cor=i%opts.length; const tmp=opts[0];opts[0]=opts[cor];opts[cor]=tmp;
    rooms.push({title:'Camera '+(i+1),
      story:'Intri într-o încăpere blocată din '+c.name+'. Pe un panou luminează un indiciu legat de o noțiune din curs. Ușa se deschide doar dacă identifici corect noțiunea și îți argumentezi alegerea.',
@@ -916,7 +919,7 @@ function sampleRooms(c){const m=c.materials;const n=Math.min(5,Math.max(3,m.leng
 function syncErCourse(){const cs=document.getElementById('erCourse');if(cs)activeCourse=cs.value;}
 async function genRooms(){syncErCourse();const c=course();ER={rooms:[],idx:0,hints:0,startTime:Date.now(),done:false,hint:'',fb:null,sel:-1,arg:'',code:[],busy:true};renderMain();
  const ctx=c.materials.map(m=>m.title+': '+m.content).join('  •  ');
- try{ if(isLive()){const sys='Creezi un Escape Room educativ pentru cursul „'+c.name+'", cu 4 camere secvențiale, bazat pe materialele de mai jos. Returnează STRICT JSON: un array de obiecte {"title":"Camera 1","story":"2 propoziții de poveste","objectives":["instrucțiune 1","instrucțiune 2","instrucțiune 3"],"clue":"indiciul de pe panou (o frază)","question":"întrebarea provocării","options":[{"label":"...","desc":"o linie"}],"correct":<index optiune corecta>,"explain":"explicația noțiunii","hint":"indiciu fără a da răspunsul"}. 3-4 opțiuni per cameră. În română. Materiale: '+ctx;
+ try{ if(isLive()){const sys='Creezi un Escape Room educativ pentru cursul „'+c.name+'", cu 4 camere secvențiale, bazat pe materialele de mai jos. Returnează STRICT JSON: un array de obiecte {"title":"Camera 1","story":"2 propoziții de poveste","objectives":["instrucțiune 1","instrucțiune 2","instrucțiune 3"],"clue":"indiciul de pe panou (o frază)","question":"întrebarea provocării (o întrebare reală despre noțiune)","options":["enunț complet al opțiunii 1","enunț complet al opțiunii 2","enunț complet al opțiunii 3"],"correct":<index optiune corecta>,"explain":"explicația noțiunii","hint":"indiciu fără a da răspunsul"}. REGULI opțiuni: 3-4 opțiuni, fiecare o AFIRMAȚIE COMPLETĂ și distinctă din domeniul cursului (NU litere precum „A"/„B", NU prefixe, NU o singură literă); opțiunile NU trebuie să indice care e cea corectă și nu conțin explicații. În română. Materiale: '+ctx;
    const raw=await callAzure([{role:'system',content:sys},{role:'user',content:'Generează camerele în JSON.'}],1800);
    const arr=JSON.parse(raw.replace(/```json|```/g,'').trim()); ER.rooms=Array.isArray(arr)&&arr.length?arr:sampleRooms(c);
  } else { ER.rooms=sampleRooms(c); } }
@@ -949,7 +952,7 @@ function erRoom(){const r=ER.rooms[ER.idx];
   <div class="er-section"><b>Ce trebuie să faci</b>${(r.objectives||[]).map(o=>`<div class="obj">${o}</div>`).join('')}</div>
   <div class="er-clue"><span class="lab">Indiciu găsit pe panoul de control</span><div>${r.clue||r.question}</div></div>
   <div class="er-challenge">Provocare: ${r.question}</div>
-  <div class="eropts">${(r.options||[]).map((o,i)=>`<label class="eropt ${ER.sel===i?'sel':''}"><input type="radio" name="eropt" value="${i}" ${ER.sel===i?'checked':''} onchange="ER.sel=${i}"><div><b>${'ABCD'[i]||''}. ${o.label}</b><span>${o.desc||''}</span></div></label>`).join('')}</div>
+  <div class="eropts">${(r.options||[]).map((o,i)=>{let t=typeof o==='string'?o:((o&&(o.text||o.label))||'');if(o&&typeof o==='object'&&o.label&&String(o.label).trim().length<=2&&o.desc)t=o.desc;return `<label class="eropt ${ER.sel===i?'sel':''}"><input type="radio" name="eropt" value="${i}" ${ER.sel===i?'checked':''} onchange="ER.sel=${i}"><div><b>${'ABCD'[i]||''}. ${t}</b></div></label>`;}).join('')}</div>
   <div class="er-section"><b>Răspunsul tău argumentat</b><textarea id="erArg" class="respbox" placeholder="Explică pe scurt de ce ai ales această variantă…" oninput="ER.arg=this.value">${ER.arg||''}</textarea></div>
   <div class="simbtns"><button class="gh" onclick="erHintBtn()">${I.hint} Cere un indiciu</button><button class="gh" onclick="go('s_chat')">${I.book} Explică noțiunea</button></div>
   ${ER.hint?`<div class="quizfb show" style="border-color:var(--gold)"><b>Indiciu:</b> ${ER.hint}</div>`:''}
