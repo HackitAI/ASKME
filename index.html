@@ -523,7 +523,7 @@ async function callAzure(messages,max){
 const STOP=new Set(['ce','este','sunt','un','o','de','la','si','și','in','în','cum','se','care','ale','pe','cu','al','a','pentru','curs','cursul','cursului','curse','acest','aceasta','acestui','acestei','material','materialul','materiale','materialele','despre','idei','principale','principala','rezuma','rezumat','rezuma','voi','vei','invata','invat','invatam','catva','cateva','prezinta','continut','continutul','noua','ne','mi','imi','spune','vreau']);
 function tok(t){return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(w=>w.length>2&&!STOP.has(w))}
 function retrieve(q,mats,k){const qt=tok(q);return mats.map(m=>{const mt=tok(m.title+' '+m.content);let s=0;qt.forEach(w=>{if(mt.includes(w))s+=2;else if(mt.some(x=>x.startsWith(w.slice(0,4))))s+=1});return{m,s}}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,k||3)}
-function isSummaryQ(q){return /rezum|ce voi (înv|inv)|despre ce|fapte[ -]?cheie|idei princip|structur|introducere|prezint|ce (înv|inv)|continut|conțin|la ce (foloseste|serveste|e bun)/i.test((q||'').toLowerCase());}
+function isSummaryQ(q){return /rezum|ce voi (înv|inv)|despre ce|(fapte|no[țt]iuni|concepte|puncte|idei)[ -]?(cheie|princip|esen)|structur|introducere|prezint|ce (înv|inv)|continut|conțin|explic.*(pe larg|conceptul principal)/i.test((q||'').toLowerCase());}
 function spreadChunks(mats,n){const pool=mats.length>4?mats.slice(1):mats;if(pool.length<=n)return pool.slice();const step=pool.length/n;const out=[];for(let i=0;i<n;i++)out.push(pool[Math.floor(i*step)]);return out;}
 function buildContext(q,mats){if(!mats||!mats.length)return [];
  if(isSummaryQ(q))return mats.slice(0,48); // whole-course questions: feed (almost) all content, like the quiz does
@@ -559,11 +559,11 @@ function setRole(r){_setRole(r);current=FIRST[r];renderSide();renderMain();docum
 /* ===== STUDENT: CHAT ===== */
 function chatArr(){return CHATS[activeCourse]||(CHATS[activeCourse]=[{role:'ai',text:`Salut! Sunt asistentul cursului de ${course().name}. Întreabă-mă orice — răspund din materialele încărcate de profesor.`}])}
 const STARTERS=[
- ['Rezumă cursul','Rezumă acest curs în câteva idei principale.'],
- ['Ce voi învăța aici?','Ce voi învăța la acest curs?'],
- ['Fapte-cheie','Care sunt cele mai importante fapte-cheie din acest curs?'],
+ ['Rezumă cursul','Rezumă pe larg acest curs: temele principale, noțiunile-cheie și ce ar trebui să rețin.'],
+ ['Ce voi învăța aici?','Ce voi învăța la acest curs? Explică pe larg temele și competențele.'],
+ ['Noțiuni-cheie','Care sunt cele mai importante noțiuni-cheie din acest curs? Listează-le și explică pe scurt fiecare.'],
  ['Fă-mi un test scurt','Generează un scurt test de autoevaluare din acest curs, cu 3 întrebări și răspunsuri.'],
- ['Explică conceptul principal','Explică-mi pe scurt conceptul principal al acestui curs.'],
+ ['Explică conceptul principal','Explică-mi pe larg conceptul principal al acestui curs.'],
  ['Un exemplu practic','Dă-mi un exemplu practic legat de acest curs.'],
 ];
 function starterBlock(){return `<div class="starters"><div class="st-lbl">💡 Încearcă să întrebi</div><div class="st-chips">${STARTERS.map(x=>`<button class="st-chip" onclick="ask('${x[1]}')">${x[0]}</button>`).join('')}</div></div>`;}
@@ -588,7 +588,7 @@ function scr_s_chat(){
    </div></div>
  </div>`;
 }
-function fmtAI(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/^\s*[-*•]\s+/gm,'• ').replace(/\n/g,'<br>');}
+function fmtAI(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^\s*[-*•]\s+/gm,'• ').replace(/\n/g,'<br>');}
 function renderMsg(m){
  const cite=m.src?`<div class="cite" onclick='showSrc(${JSON.stringify(m.src).replace(/'/g,"&#39;")})'>${I.link} ${m.src.ref} — vezi sursa</div>`:'';
  if(m.role==='ai')return `<div class="msg ai"><div class="ava">AI</div><div class="b">${fmtAI(m.text)}${cite}</div></div>`;
@@ -604,12 +604,12 @@ async function ask(preset){
  try{
    if(isLive()){const ctxs=sel.map(m=>`### ${m.title} (${m.ref})\n${m.content}`).join('\n\n')||'(niciun material)';
      const sumMode=isSummaryQ(q);
-     const sys=`Ești asistentul cursului de ${course().name}. Răspunzi EXCLUSIV pe baza fragmentelor de mai jos, extrase automat din materialele cursului (pot fi în dezordine sau parțiale — sintetizează între ele).
-- Concentrează-te pe CONȚINUTUL DE FOND: noțiuni, definiții, idei, fapte. Ignoră prefața, „cum se folosește", cuprinsul, drepturile de autor.
-- Pentru un REZUMAT: scrie un rezumat CUPRINZĂTOR și detaliat (mai multe paragrafe scurte, ~10–16 propoziții) care acoperă principalele teme, noțiunile-cheie și concluziile din materiale. Organizează logic și dă exemple din text unde ajută.
-- Pentru FAPTE-CHEIE: listează 10–18 puncte, fiecare pe câte un rând care începe cu „• ", acoperind cât mai mult din conținutul de fond (definiții, principii, relații importante).
-- Acoperă cât mai mult din materialele furnizate; nu te limita la primul fragment.
-- Dacă fragmentele conțin doar text administrativ/introductiv, spune clar că textul extras pare să fie doar partea introductivă și că nu ai destul conținut de fond — nu inventa și nu eticheta greșit subiectul.
+     const sys=`Ești asistentul cursului de ${course().name}. Te bazezi pe fragmentele de mai jos, extrase automat din materialele cursului (pot fi în dezordine sau parțiale — sintetizează între ele).
+- Pleacă de la noțiunile și temele din fragmente și DEZVOLTĂ-le ca un profesor pentru un student: explică fiecare idee clar, cu definiții, exemple și de ce contează. Nu doar repeta textul — explică-l și extinde-l.
+- Rămâi pe subiectul materialelor; nu contrazice fragmentele și nu eticheta greșit subiectul.
+- Pentru REZUMAT sau „ce voi învăța": scrie un răspuns AMPLU, pe mai multe paragrafe (minim ~250 de cuvinte), care acoperă toate temele principale din materiale și le dezvoltă.
+- Pentru NOȚIUNI-CHEIE: listează minimum 10–15 puncte, fiecare pe câte un rând care începe cu „• ", iar fiecare punct să aibă o scurtă explicație (nu doar titlul).
+- Dacă fragmentele conțin doar text administrativ/introductiv (prefață, „cum se folosește", cuprins), spune clar că textul extras pare să fie doar partea introductivă și că nu ai destul conținut de fond.
 - Răspunde în română, clar și bine structurat.
 
 Fragmente:
