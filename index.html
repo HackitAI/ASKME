@@ -258,6 +258,7 @@ button{font-family:inherit;cursor:pointer}
 .doc .dmeta{font-size:11.5px;color:var(--muted);margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
 .doc h3{font-size:14px;color:var(--navy);margin:18px 0 8px;font-weight:700}
 .doc p,.doc li{font-size:13.5px;line-height:1.6;color:var(--body)}.doc ol,.doc ul{margin-left:20px}.doc li{margin-bottom:6px}
+.doc table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}.doc th,.doc td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}.doc th{background:var(--paper);font-weight:700;color:var(--navy)}
 .doc .qbox{background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:15px;margin-top:12px}
 .doc .qbox .qn{font-size:11.5px;color:var(--cyan-dk);font-weight:700}
 .doc .qbox .qt{font-size:13.5px;color:var(--text);margin:5px 0 9px;font-weight:600}
@@ -978,6 +979,7 @@ async function deleteManage(){const c=COURSES.find(x=>x.id===MANAGE.sel);if(!c)r
 
 /* ===== FACULTY: GENERATOR ===== */
 let genType='Test grilă';
+let tCourse='';
 function pick(el){document.querySelectorAll('.chips .chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');genType=el.textContent}
 function scr_f_gen(){return `<div class="phead"><div class="eyebrow">Asistent pentru cadre didactice</div><h1>Generare conținut educațional</h1>
   <p>Creează teste, laboratoare, fișe de lucru, examene, planuri de lecție și bareme — construite pe materialele tale${isLive()?', cu AI generativ':' (mod demo)'}.</p></div>
@@ -1000,10 +1002,28 @@ function generate(){const body=document.getElementById('genbody');const type=gen
  body.classList.remove('empty');body.innerHTML='<div class="skel" style="width:55%;height:18px"></div><div class="skel"></div><div class="skel" style="width:90%"></div><div class="skel" style="width:80%"></div><div class="skel"></div><div class="skel" style="width:70%"></div>';
  const co=COURSES.find(c=>c.name===courseName)||COURSES[0];const ctx=co.materials.map(m=>`${m.title}: ${m.content}`).join('\n');
  if(isLive()){
-   callAzure([{role:'system',content:`Ești asistent didactic. Generează ${type.toLowerCase()} pentru cursul de ${courseName}, tema „${topic}”, nivel ${level}, ${n} itemi, bazat EXCLUSIV pe materialele de mai jos. Răspunde în HTML simplu folosind doar <h2>,<h3>,<p>,<ol>,<li>,<div class="qbox"> cu <div class="qn">, <div class="qt">, <div class="qo">. Marchează răspunsul corect cu ✓. În română.\n\nMateriale:\n${ctx}`},{role:'user',content:`Generează ${type} despre ${topic}.`}],1500).then(html=>{body.innerHTML=`<div class="doc">${html.replace(/```html|```/g,'')}</div>`}).catch(e=>{body.innerHTML=`<div class="doc">${sampleDoc(type,topic,courseName,level,n)}</div>`});
+   const rules={
+     'Test grilă':'Generează un TEST GRILĂ cu întrebări cu variante de răspuns. Marchează răspunsul corect cu ✓. Folosește <div class="qbox"> cu <div class="qn">, <div class="qt">, <div class="qo"> pentru fiecare item.',
+     'Examen':'Generează un EXAMEN structurat pe secțiuni (grilă, întrebări deschise, aplicații), cu punctaj pe secțiune și punctaj total. Marchează răspunsul corect la grilă cu ✓. Folosește <h2>,<h3>,<p>,<ol>,<li> și <div class="qbox"> cu <div class="qn">,<div class="qt">,<div class="qo">.',
+     'Laborator':'Generează un LABORATOR practic: <h3>Scop</h3>, <h3>Materiale</h3>, <h3>Pași de lucru</h3> (lista numerotată), <h3>Întrebări de reflecție</h3>, <h3>Rezultate așteptate</h3>. Folosește <h2>,<h3>,<p>,<ol>,<li>.',
+     'Fișă de lucru':'Generează o FIȘĂ DE LUCRU cu exerciții/aplicații de rezolvat, gradate ca dificultate, lăsând spațiu pentru răspuns. Folosește <h2>,<h3>,<p>,<ol>,<li>.',
+     'Plan de lecție':'Generează un PLAN DE LECȚIE: <h3>Obiective</h3>, <h3>Durată</h3>, <h3>Etape</h3> (deschidere, predare, practică, evaluare — cu timpi orientativi), <h3>Materiale necesare</h3>, <h3>Temă</h3>. Folosește <h2>,<h3>,<p>,<ol>,<li>.',
+     'Barem':'Generează un BAREM DE CORECTARE (schemă de notare) — NU un test. Pentru fiecare item sau cerință include: enunțul pe scurt, RĂSPUNSUL CORECT/model și PUNCTAJUL alocat, plus reguli de punctare parțială unde e cazul. Prezintă-l ca <table> cu coloanele „Item / Cerință", „Răspuns așteptat", „Punctaj"; adaugă un rând de TOTAL și, dacă e relevant, conversia punctaj→notă. NU folosi qbox și nu lăsa răspunsuri necompletate.'
+   };
+   const rule=rules[type]||rules['Test grilă'];
+   callAzure([{role:'system',content:`Ești asistent didactic. Sarcină: ${rule}\nCurs: ${courseName}. Temă: „${topic}". Nivel: ${level}. Număr de itemi/cerințe: ${n}. Bazează-te EXCLUSIV pe materialele de mai jos. Scrie în română, DOAR HTML simplu (fără markdown, fără ## sau **).\n\nMateriale:\n${ctx}`},{role:'user',content:`Generează ${type} despre ${topic}.`}],1800).then(html=>{body.innerHTML=`<div class="doc">${html.replace(/```html|```/g,'')}</div>`}).catch(e=>{body.innerHTML=`<div class="doc">${sampleDoc(type,topic,courseName,level,n)}</div>`});
  }else{setTimeout(()=>{body.innerHTML=`<div class="doc">${sampleDoc(type,topic,courseName,level,n)}</div>`},850);}
 }
 function sampleDoc(type,topic,courseName,level,n){
+ if(type==='Barem')return `<h2>Barem de corectare — ${topic}</h2><div class="dmeta">${courseName} · nivel ${level.toLowerCase()} · schemă de notare generată din materialele cursului</div>
+ <table><thead><tr><th>Item / Cerință</th><th>Răspuns așteptat</th><th>Punctaj</th></tr></thead><tbody>
+ <tr><td>1. Definiția noțiunii de ${topic.toLowerCase()}</td><td>Definiție corectă, cu termenii-cheie din curs</td><td>2 p (1 p definiție parțială)</td></tr>
+ <tr><td>2. Formula / relația de calcul</td><td>Relația corectă și semnificația variabilelor</td><td>2 p (1 p doar formula)</td></tr>
+ <tr><td>3. Aplicație numerică</td><td>Calcul corect + interpretarea rezultatului</td><td>3 p (1 p calcul, 2 p interpretare)</td></tr>
+ <tr><td>4. Exemplu propriu</td><td>Exemplu relevant, explicat coerent</td><td>2 p</td></tr>
+ <tr><td><b>TOTAL</b></td><td>—</td><td><b>9 p + 1 p din oficiu = 10</b></td></tr>
+ </tbody></table>
+ <p style="margin-top:12px;color:var(--muted);font-size:12.5px">Punctarea parțială se acordă conform indicațiilor din paranteze.</p>`;
  return `<h2>${type} — ${topic}</h2><div class="dmeta">${courseName} · nivel ${level.toLowerCase()} · ${n} itemi · generat din materialele cursului</div>
  <h3>Obiectiv</h3><p>Verificarea înțelegerii noțiunii de ${topic.toLowerCase()} și a aplicării corecte a relațiilor de calcul aferente.</p>
  <h3>Itemi</h3>
@@ -1030,27 +1050,30 @@ function scr_f_cohort(){
 }
 
 /* ===== FACULTY: TEACHING ASSISTANT ===== */
-function tchatArr(){if(!TCHAT.length)TCHAT.push({role:'ai',text:'Salut! Sunt asistentul tău didactic. Cere-mi să creez întrebări, să sumarizez un capitol, să propun idei de laborator sau să schițez un barem — pe baza cursurilor tale.'});return TCHAT}
-function scr_f_assist(){const msgs=tchatArr();
+function tchatArr(){if(!TCHAT.length)TCHAT.push({role:'ai',text:'Salut! Sunt asistentul tău didactic. Cere-mi să creez întrebări, să sumarizez un capitol, să propun idei de laborator sau să schițez un barem — pe baza cursului selectat.'});return TCHAT}
+function tCourseObj(){return COURSES.find(c=>c.id===(tCourse||(COURSES[0]&&COURSES[0].id)))||COURSES[0];}
+function fmtT(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^#{1,6}\s*/gm,'').replace(/^\s*[-*•]\s+/gm,'• ').replace(/\n/g,'<br>');}
+function scr_f_assist(){const msgs=tchatArr();const tcid=tCourse||(COURSES[0]&&COURSES[0].id);const co=tCourseObj();
  return `<div class="phead"><div class="eyebrow">Asistent pentru cadre didactice</div><h1>Asistent didactic</h1>
   <p>Un coleg AI pentru sarcinile zilnice: întrebări de examen, recapitulări, idei de activități, formulări de feedback${isLive()?'':' (mod demo)'}.</p></div>
+ <div class="coursebar"><span class="lbl">Curs</span><select id="tCourse" class="coursesel" onchange="tCourse=this.value;renderMain()">${COURSES.map(x=>`<option value="${x.id}" ${x.id===tcid?'selected':''}>${x.name}</option>`).join('')}</select><span class="ctag">${co?co.tag:''}</span><span class="cdesc">Asistentul răspunde pe baza materialelor cursului selectat.</span></div>
  <div class="chatwrap" style="grid-template-columns:1fr 268px">
-   <div class="card chat"><div class="ch-head"><div class="ci">${I.chat}</div><div><div class="t">Asistent didactic</div><div class="s">conectat la cursurile tale</div></div></div>
+   <div class="card chat"><div class="ch-head"><div class="ci">${I.chat}</div><div><div class="t">Asistent didactic · ${co?co.name:''}</div><div class="s">conectat la materialele cursului</div></div></div>
      <div class="stream" id="tstream">${msgs.map(m=>m.role==='ai'?`<div class="msg ai"><div class="ava">AI</div><div class="b">${m.text}</div></div>`:`<div class="msg me"><div class="ava">PI</div><div class="b">${m.text}</div></div>`).join('')}</div>
-     <div class="composer"><input id="tInput" placeholder="Ex: creează 3 întrebări despre elasticitate…" onkeydown="if(event.key==='Enter')tAsk()"><button class="send" onclick="tAsk()">${I.send}</button></div></div>
+     <div class="composer"><input id="tInput" placeholder="Ex: creează 3 întrebări despre…" onkeydown="if(event.key==='Enter')tAsk()"><button class="send" onclick="tAsk()">${I.send}</button></div></div>
    <div class="card ctxpanel"><div class="h">Comenzi utile</div><div class="body">
-     <div class="quickq" onclick="tAsk('Creează 3 întrebări grilă despre elasticitatea cererii')">3 întrebări despre elasticitate</div>
-     <div class="quickq" onclick="tAsk('Sumarizează pe scurt capitolul despre echilibrul pieței')">Sumarizează echilibrul pieței</div>
-     <div class="quickq" onclick="tAsk('Propune o idee de laborator practic pentru cerere și ofertă')">Idee de laborator</div>
-     <div class="quickq" onclick="tAsk('Scrie un barem scurt pentru o întrebare despre cost marginal')">Barem pentru cost marginal</div>
+     <div class="quickq" onclick="tAsk('Creează 3 întrebări grilă din acest curs, cu răspunsurile corecte marcate.')">3 întrebări grilă</div>
+     <div class="quickq" onclick="tAsk('Sumarizează pe scurt un capitol-cheie din acest curs.')">Sumarizează un capitol</div>
+     <div class="quickq" onclick="tAsk('Propune o idee de activitate practică sau laborator pentru acest curs.')">Idee de activitate</div>
+     <div class="quickq" onclick="tAsk('Schițează un barem de corectare pentru o întrebare din acest curs.')">Schiță de barem</div>
    </div></div></div>`;
 }
 function scrollTChat(){const s=document.getElementById('tstream');if(s)s.scrollTop=1e9}
 function tAsk(preset){const inp=document.getElementById('tInput');const q=(preset||(inp?inp.value:'')).trim();if(!q)return;if(inp)inp.value='';
  const arr=tchatArr();arr.push({role:'me',text:q});renderMain();
  const s=document.getElementById('tstream');s.insertAdjacentHTML('beforeend','<div class="msg ai" id="ttp"><div class="ava">AI</div><div class="b"><span class="typing"><i></i><i></i><i></i></span></div></div>');s.scrollTop=1e9;
- const ctx=MICRO.map(m=>`${m.title}: ${m.content}`).join('\n');
- if(isLive()){callAzure([{role:'system',content:`Ești asistent didactic pentru un profesor de economie. Răspunde concret și util, în română, pe baza materialelor de curs.\nMateriale:\n${ctx}`},{role:'user',content:q}],800).then(t=>{arr.push({role:'ai',text:t.replace(/\n/g,'<br>')});renderMain()}).catch(()=>{arr.push({role:'ai',text:tFallback(q)});renderMain()});
+ const co=tCourseObj();const ctx=(co?co.materials:[]).map(m=>`${m.title}: ${m.content}`).join('\n');
+ if(isLive()){callAzure([{role:'system',content:`Ești asistent didactic pentru profesorul cursului de ${co?co.name:''}. Răspunde concret și util, în română, pe baza materialelor de mai jos. Nu folosi markdown (fără ##, **); pentru liste folosește rânduri care încep cu „• ". Structurează clar.\nMateriale:\n${ctx}`},{role:'user',content:q}],900).then(t=>{arr.push({role:'ai',text:fmtT(t)});renderMain()}).catch(()=>{arr.push({role:'ai',text:tFallback(q)});renderMain()});
  }else{setTimeout(()=>{arr.push({role:'ai',text:tFallback(q)});renderMain()},500)}
 }
 function tFallback(q){if(/întreb|gril|test/i.test(q))return '1. Cererea este elastică atunci când coeficientul depășește 1? (A/F)<br>2. Ce arată legea cererii despre relația preț–cantitate?<br>3. Definește prețul de echilibru.<br><i>(mod demo — conectează Azure OpenAI pentru generare completă)</i>';
