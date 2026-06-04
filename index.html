@@ -526,11 +526,11 @@ function retrieve(q,mats,k){const qt=tok(q);return mats.map(m=>{const mt=tok(m.t
 function isSummaryQ(q){return /rezum|ce voi (înv|inv)|despre ce|fapte[ -]?cheie|idei princip|structur|introducere|prezint|ce (înv|inv)|continut|conțin|la ce (foloseste|serveste|e bun)/i.test((q||'').toLowerCase());}
 function spreadChunks(mats,n){const pool=mats.length>4?mats.slice(1):mats;if(pool.length<=n)return pool.slice();const step=pool.length/n;const out=[];for(let i=0;i<n;i++)out.push(pool[Math.floor(i*step)]);return out;}
 function buildContext(q,mats){if(!mats||!mats.length)return [];
- if(isSummaryQ(q))return spreadChunks(mats,8);
- const hits=retrieve(q,mats,6).map(h=>h.m);
+ if(isSummaryQ(q))return mats.slice(0,48); // whole-course questions: feed (almost) all content, like the quiz does
+ const hits=retrieve(q,mats,8).map(h=>h.m);
  if(hits.length>=3)return hits;
- const extra=spreadChunks(mats,6).filter(m=>hits.indexOf(m)<0);
- return hits.concat(extra).slice(0,6);}
+ const extra=spreadChunks(mats,8).filter(m=>hits.indexOf(m)<0);
+ return hits.concat(extra).slice(0,8);}
 
 /* ===== NAV ===== */
 const NAV={
@@ -588,10 +588,11 @@ function scr_s_chat(){
    </div></div>
  </div>`;
 }
+function fmtAI(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/^\s*[-*•]\s+/gm,'• ').replace(/\n/g,'<br>');}
 function renderMsg(m){
  const cite=m.src?`<div class="cite" onclick='showSrc(${JSON.stringify(m.src).replace(/'/g,"&#39;")})'>${I.link} ${m.src.ref} — vezi sursa</div>`:'';
- if(m.role==='ai')return `<div class="msg ai"><div class="ava">AI</div><div class="b">${m.text}${cite}</div></div>`;
- return `<div class="msg me"><div class="ava">AP</div><div class="b">${m.text}</div></div>`;
+ if(m.role==='ai')return `<div class="msg ai"><div class="ava">AI</div><div class="b">${fmtAI(m.text)}${cite}</div></div>`;
+ return `<div class="msg me"><div class="ava">AP</div><div class="b">${fmtAI(m.text)}</div></div>`;
 }
 function scrollChat(){const s=document.getElementById('stream');if(s)s.scrollTop=s.scrollExp=1e9}
 async function ask(preset){
@@ -602,14 +603,17 @@ async function ask(preset){
  let ans;
  try{
    if(isLive()){const ctxs=sel.map(m=>`### ${m.title} (${m.ref})\n${m.content}`).join('\n\n')||'(niciun material)';
-     const sys=`Ești asistentul cursului de ${course().name}. Răspunde EXCLUSIV pe baza fragmentelor de mai jos, extrase din materialele cursului.
-- Sintetizează CONȚINUTUL DE FOND (noțiuni, idei, fapte), NU instrucțiunile de utilizare, prefața sau cuprinsul.
-- Dacă fragmentele conțin doar text administrativ (prefață, „cum se folosește", cuprins, drepturi de autor), spune clar că textul extras pare să fie doar partea introductivă și că nu ai destul conținut de fond — nu inventa și nu eticheta greșit subiectul.
-- Scrie în română, clar. La rezumate folosește 4–6 propoziții; altfel răspunde la obiect.
+     const sumMode=isSummaryQ(q);
+     const sys=`Ești asistentul cursului de ${course().name}. Răspunzi EXCLUSIV pe baza fragmentelor de mai jos, extrase automat din materialele cursului (pot fi în dezordine sau parțiale — sintetizează între ele).
+- Concentrează-te pe CONȚINUTUL DE FOND: noțiuni, definiții, idei, fapte. Ignoră prefața, „cum se folosește", cuprinsul, drepturile de autor.
+- Pentru un REZUMAT: scrie 4–6 propoziții coerente despre subiectul real al cursului.
+- Pentru FAPTE-CHEIE: listează 5–8 puncte concise, fiecare pe câte un rând care începe cu „• ".
+- Dacă fragmentele conțin doar text administrativ/introductiv, spune clar că textul extras pare să fie doar partea introductivă și că nu ai destul conținut de fond — nu inventa și nu eticheta greșit subiectul.
+- Răspunde în română, clar și la obiect.
 
 Fragmente:
 ${ctxs}`;
-     ans=await callAzure([{role:'system',content:sys},{role:'user',content:q}],700);
+     ans=await callAzure([{role:'system',content:sys},{role:'user',content:q}], sumMode?1100:600);
    }else{ans=top?`${top.content.split('. ').slice(0,2).join('. ')}.`.replace('..','.'):'Acest subiect nu pare acoperit în materialele acestui curs.';}
  }catch(e){ans=(top?top.content.split('. ')[0]+'.':'Subiect neacoperit în materiale.')+' (apel eșuat)';}
  arr.push({role:'ai',text:ans,src:top?{title:top.title,ref:top.ref,content:top.content}:null});renderMain();
