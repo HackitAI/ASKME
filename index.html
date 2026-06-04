@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -219,6 +218,21 @@ button{font-family:inherit;cursor:pointer}
 .pdfpick svg{width:18px;height:18px;flex:none}
 .ncmsg{font-size:13px;font-weight:600;min-height:2px}
 .ncmsg.err{color:var(--bad)}
+/* faculty: manage courses */
+.mgrid{display:grid;grid-template-columns:330px 1fr;gap:16px;align-items:start}
+.mlist{padding:10px}
+.mlist-h{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:8px 10px}
+.mcourse{display:flex;align-items:center;gap:11px;padding:10px;border-radius:11px;cursor:pointer;transition:.14s;border:1px solid transparent}
+.mcourse:hover{background:var(--paper)}
+.mcourse.on{background:var(--ice-soft);border-color:#bfe3ef}
+.mcourse .ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;flex:none}
+.mcourse .ic svg{width:18px;height:18px}
+.mcourse .tt{font-weight:600;color:var(--text);font-size:13.5px}
+.mcourse .mm{font-size:11.5px;color:var(--muted)}
+.mrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.mbtns{display:flex;gap:10px;align-items:center}
+.mdel{background:#fff;border:1.5px solid var(--bad);color:var(--bad);font-weight:700;font-size:13px;padding:10px 16px;border-radius:10px;font-family:inherit;cursor:pointer;transition:.14s}
+.mdel:hover{background:var(--bad);color:#fff}
 /* generator */
 .genwrap{display:grid;grid-template-columns:320px 1fr;gap:16px;height:560px}
 .genform{padding:18px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
@@ -535,7 +549,7 @@ function buildContext(q,mats){if(!mats||!mats.length)return [];
 /* ===== NAV ===== */
 const NAV={
  student:[{id:'s_lib',icon:I.book,label:'Cursurile mele'},{id:'s_chat',icon:I.chat,label:'Asistent curs'},{id:'s_quiz',icon:I.quiz,label:'Autoevaluare'},{id:'s_sim',icon:I.sim,label:'Simulare profesională'},{id:'s_escape',icon:I.lock,label:'Escape Room'},{id:'s_prog',icon:I.chart,label:'Progresul meu'}],
- faculty:[{id:'f_dash',icon:I.grid,label:'Panou de bord'},{id:'f_upload',icon:I.up,label:'Adaugă curs'},{id:'f_gen',icon:I.wand,label:'Generare conținut'},{id:'f_cohort',icon:I.chart,label:'Analiză grupă'},{id:'f_assist',icon:I.chat,label:'Asistent didactic'}]
+ faculty:[{id:'f_dash',icon:I.grid,label:'Panou de bord'},{id:'f_upload',icon:I.up,label:'Adaugă curs'},{id:'f_manage',icon:I.book,label:'Gestionează cursuri'},{id:'f_gen',icon:I.wand,label:'Generare conținut'},{id:'f_cohort',icon:I.chart,label:'Analiză grupă'},{id:'f_assist',icon:I.chat,label:'Asistent didactic'}]
 };
 const FIRST={student:'s_lib',faculty:'f_dash'};
 
@@ -878,14 +892,14 @@ let NEWPDF=null, ADDED=null;
 function pickPdf(input){const fl=input.files&&input.files[0];if(!fl)return;NEWPDF=fl;const el=document.getElementById('pdfName');if(el)el.textContent=fl.name;}
 function ncVal(id){const e=document.getElementById(id);return e?e.value.trim():'';}
 function fileToB64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result));r.onerror=rej;r.readAsDataURL(file);});}
-async function loadCourses(){try{const r=await fetch('/api/courses');if(!r.ok)return;const arr=await r.json();if(Array.isArray(arr)){let add=0;arr.forEach(c=>{if(c&&c.id&&!COURSES.some(x=>x.id===c.id)){COURSES.push(c);add++;}});if(add)renderMain();}}catch(e){}}
+async function loadCourses(){try{const r=await fetch('/api/courses');if(!r.ok)return;const arr=await r.json();if(Array.isArray(arr)){let ch=0;arr.forEach(c=>{if(!c||!c.id)return;c._db=true;const i=COURSES.findIndex(x=>x.id===c.id);if(i>=0)COURSES[i]=c;else COURSES.push(c);ch++;});if(ch)renderMain();}}catch(e){}}
 async function addCourse(){const name=ncVal('ncName');const msg=document.getElementById('ncMsg');
  if(!name){if(msg){msg.className='ncmsg err';msg.textContent='Adaugă cel puțin numele cursului.';}return;}
  const tag=ncVal('ncTag')||'General';const desc=ncVal('ncDesc');const text=ncVal('ncText');
  if(msg){msg.className='ncmsg';msg.textContent='Se procesează cursul…';}
  let pdf=null;if(NEWPDF){try{pdf=await fileToB64(NEWPDF);}catch(e){}}
  try{const r=await fetch('/api/upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,tag,description:desc,text,pdf})});
-   if(r.ok){const c=await r.json();if(c&&c.id){if(!COURSES.some(x=>x.id===c.id))COURSES.push(c);activeCourse=c.id;NEWPDF=null;ADDED=name;renderMain();return;}}
+   if(r.ok){const c=await r.json();if(c&&c.id){c._db=true;if(!COURSES.some(x=>x.id===c.id))COURSES.push(c);activeCourse=c.id;NEWPDF=null;ADDED=name;renderMain();return;}}
  }catch(e){}
  /* fallback: local in-memory (demo / no backend) */
  const id='c'+Date.now();
@@ -915,9 +929,51 @@ function scr_f_upload(){
    <button class="genbtn" onclick="addCourse()">${I.wand} Adaugă cursul</button>
  </div>
  <div class="card ncside"><h3 style="font-family:var(--font-d);color:var(--navy);margin:0 0 12px;font-size:15px">Cursuri existente (${COURSES.length})</h3>
-   ${COURSES.map(c=>`<div class="srcitem"><div class="ic" style="background:linear-gradient(120deg,${c.c1},${c.c2})">${I.book.replace(/currentColor/g,'#fff')}</div><div style="flex:1"><div class="tt">${c.name}</div><div class="mm">${c.tag} · ${c.materials.length} materiale</div></div></div>`).join('')}
+   ${COURSES.map(c=>`<div class="srcitem" style="cursor:pointer" onclick="openManage('${c.id}')"><div class="ic" style="background:linear-gradient(120deg,${c.c1},${c.c2})">${I.book.replace(/currentColor/g,'#fff')}</div><div style="flex:1"><div class="tt">${c.name}</div><div class="mm">${c.tag} · ${c.materials.length} materiale</div></div></div>`).join('')}
    <div style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5">Cursurile adăugate persistă și apar pentru toți studenții. Un PDF încărcat este procesat automat: textul devine „materiale” pe care se construiesc asistentul, testele, simularea și escape room-ul.</div>
  </div></div>`;
+}
+
+/* ===== FACULTY: MANAGE COURSES ===== */
+let MANAGE={sel:null}, MPDF=null;
+function chunkText(text,name){return text.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean).slice(0,40).map((p,i)=>({id:'m'+Date.now()+i,title:name+' — fragment '+(i+1),ref:'fragment '+(i+1),content:p}));}
+function selectManage(id){MANAGE.sel=id;MPDF=null;}
+function openManage(id){MANAGE.sel=id;MPDF=null;go('f_manage');}
+function pickMPdf(input){const fl=input.files&&input.files[0];if(!fl)return;MPDF=fl;const el=document.getElementById('mPdfName');if(el)el.textContent=fl.name;}
+function scr_f_manage(){
+ if(!MANAGE.sel||!COURSES.some(c=>c.id===MANAGE.sel))MANAGE.sel=COURSES[0]?COURSES[0].id:null;
+ const list=COURSES.map(c=>`<div class="mcourse ${c.id===MANAGE.sel?'on':''}" onclick="selectManage('${c.id}');renderMain()"><div class="ic" style="background:linear-gradient(120deg,${c.c1},${c.c2})">${I.book.replace(/currentColor/g,'#fff')}</div><div style="flex:1"><div class="tt">${c.name}</div><div class="mm">${c.tag} · ${c.materials.length} materiale${c._db?'':' · demo'}</div></div></div>`).join('');
+ const c=COURSES.find(x=>x.id===MANAGE.sel);
+ const detail=c?`<div class="card ncform">
+   <div class="mrow"><div class="eyebrow" style="color:var(--cyan-dk)">Editează cursul</div><span class="ctag">${c._db?'salvat':'demo · în memorie'}</span></div>
+   <div class="fld"><label>Nume curs</label><input id="mName" value="${(c.name||'').replace(/"/g,'&quot;')}"></div>
+   <div class="fld"><label>Disciplină</label><input id="mTag" value="${(c.tag||'').replace(/"/g,'&quot;')}"></div>
+   <div class="fld"><label>Descriere scurtă</label><input id="mDesc" value="${(c.description||'').replace(/"/g,'&quot;')}"></div>
+   <div class="fld"><label>Adaugă conținut text <span style="color:var(--muted);font-weight:500">— opțional, se adaugă la materiale</span></label><textarea id="mText" class="respbox" placeholder="Lipește text suplimentar de curs (secțiuni separate prin rând gol)…"></textarea></div>
+   <div class="fld"><label>Adaugă PDF <span style="color:var(--muted);font-weight:500">— opțional, textul se extrage automat</span></label>
+     <div class="pdfpick" onclick="document.getElementById('mPdfInp').click()">${I.up}<span id="mPdfName">Alege un PDF…</span></div>
+     <input type="file" id="mPdfInp" accept="application/pdf" style="display:none" onchange="pickMPdf(this)"></div>
+   <div class="ncmsg" id="mMsg">${c.materials.length} materiale în acest curs</div>
+   <div class="mbtns"><button class="genbtn" style="flex:1" onclick="saveManage()">${I.wand} Salvează modificările</button><button class="mdel" onclick="deleteManage()">Șterge</button></div>
+ </div>`:`<div class="card gen-empty"><div class="ph"><p>Niciun curs încă. Adaugă unul din „Adaugă curs”.</p></div></div>`;
+ return `<div class="phead"><div class="eyebrow">Predare · administrare</div><h1>Gestionează cursuri</h1><p>Editează numele, disciplina și descrierea, adaugă conținut sau un PDF, ori șterge cursuri. Modificările apar imediat pentru studenți.</p></div>
+ <div class="mgrid"><div class="card mlist"><div class="mlist-h">Toate cursurile (${COURSES.length})</div>${list}</div><div>${detail}</div></div>`;
+}
+async function saveManage(){const c=COURSES.find(x=>x.id===MANAGE.sel);if(!c)return;const msg=document.getElementById('mMsg');
+ const name=ncVal('mName')||c.name;const tag=ncVal('mTag')||c.tag;const desc=ncVal('mDesc');const addText=ncVal('mText');
+ if(msg){msg.className='ncmsg';msg.textContent='Se salvează…';}
+ c.name=name;c.tag=tag;if(desc)c.description=desc;
+ if(addText)c.materials=c.materials.concat(chunkText(addText,name)).slice(0,80);
+ let pdf=null;if(MPDF){try{pdf=await fileToB64(MPDF);}catch(e){}}
+ try{const r=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({course:{id:c.id,name:c.name,tag:c.tag,description:c.description,progress:c.progress||0,c1:c.c1,c2:c.c2,materials:c.materials,docs:c.docs||[],createdAt:c.createdAt||0},pdf})});
+   if(r.ok){const saved=await r.json();if(saved&&saved.id){saved._db=true;const i=COURSES.findIndex(x=>x.id===saved.id);if(i>=0)COURSES[i]=saved;MANAGE.sel=saved.id;MPDF=null;renderMain();return;}}
+ }catch(e){}
+ MPDF=null;renderMain();
+}
+async function deleteManage(){const c=COURSES.find(x=>x.id===MANAGE.sel);if(!c)return;
+ if(!confirm('Ștergi cursul „'+c.name+'"? Acțiunea nu poate fi anulată.'))return;
+ try{if(c._db)await fetch('/api/courses?id='+encodeURIComponent(c.id),{method:'DELETE'});}catch(e){}
+ const i=COURSES.findIndex(x=>x.id===c.id);if(i>=0)COURSES.splice(i,1);MANAGE.sel=COURSES[0]?COURSES[0].id:null;renderMain();
 }
 
 /* ===== FACULTY: GENERATOR ===== */
@@ -1003,7 +1059,7 @@ function tFallback(q){if(/întreb|gril|test/i.test(q))return '1. Cererea este el
  return 'Pot crea întrebări, recapitulări, idei de laborator și bareme din cursurile tale. Conectează Azure OpenAI în Setări pentru răspunsuri generative complete. <i>(mod demo)</i>';
 }
 
-const SCREENS={s_chat:scr_s_chat,s_lib:scr_s_lib,s_quiz:scr_s_quiz,s_sim:scr_s_sim,s_escape:scr_s_escape,s_prog:scr_s_prog,f_dash:scr_f_dash,f_upload:scr_f_upload,f_gen:scr_f_gen,f_cohort:scr_f_cohort,f_assist:scr_f_assist};
+const SCREENS={s_chat:scr_s_chat,s_lib:scr_s_lib,s_quiz:scr_s_quiz,s_sim:scr_s_sim,s_escape:scr_s_escape,s_prog:scr_s_prog,f_dash:scr_f_dash,f_upload:scr_f_upload,f_manage:scr_f_manage,f_gen:scr_f_gen,f_cohort:scr_f_cohort,f_assist:scr_f_assist};
 
 /* timer loop */
 setInterval(()=>{const t=document.getElementById('timer');if(!t||ER.done||!ER.startTime)return;

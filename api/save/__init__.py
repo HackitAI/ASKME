@@ -1,10 +1,8 @@
-import os, json, base64, io, time, random
+import os, json, base64, io
 import azure.functions as func
 from azure.storage.blob import BlobServiceClient
 
 CONTAINER = "courses"
-PALETTE = [["#1E2761","#3CBEE1"],["#26305C","#5B7FB9"],["#3A2E5C","#8E7CC3"],
-           ["#7A2E3B","#E0707E"],["#1E5C57","#4FB6A8"],["#14324A","#2BA3C4"],["#6B3E1E","#D9A05B"]]
 
 
 def _client():
@@ -18,7 +16,6 @@ def _client():
 
 
 def _chunks_from_text(text, max_len=900):
-    """Group paragraphs into ~max_len-char chunks."""
     paras = [p.strip() for p in text.split("\n") if p.strip()]
     chunks, buf = [], ""
     for p in paras:
@@ -31,10 +28,10 @@ def _chunks_from_text(text, max_len=900):
     return chunks
 
 
-def _materials_from_pdf(pdf_bytes, name):
+def _materials_from_pdf(pdf_bytes, name, start_idx=0):
     from pypdf import PdfReader
     reader = PdfReader(io.BytesIO(pdf_bytes))
-    mats, idx = [], 0
+    mats, idx = [], start_idx
     for pi, page in enumerate(reader.pages):
         txt = page.extract_text() or ""
         if not txt.strip():
@@ -43,15 +40,9 @@ def _materials_from_pdf(pdf_bytes, name):
             mats.append({"id": f"m{idx}", "title": f"{name} — pag. {pi+1}",
                          "ref": f"pag. {pi+1}", "content": c})
             idx += 1
-            if idx >= 60:
+            if idx >= start_idx + 60:
                 return mats
     return mats
-
-
-def _materials_from_text(text, name):
-    return [{"id": f"m{i}", "title": f"{name} — fragment {i+1}",
-             "ref": f"fragment {i+1}", "content": c}
-            for i, c in enumerate(_chunks_from_text(text)[:40])]
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -61,42 +52,25 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(json.dumps({"error": "invalid JSON"}),
                                  status_code=400, mimetype="application/json")
 
-    name = (body.get("name") or "").strip()
-    if not name:
-        return func.HttpResponse(json.dumps({"error": "name required"}),
+    course = body.get("course") or {}
+    cid = course.get("id")
+    if not cid or not (course.get("name") or "").strip():
+        return func.HttpResponse(json.dumps({"error": "course id and name required"}),
                                  status_code=400, mimetype="application/json")
-    tag = (body.get("tag") or "General").strip()
-    desc = (body.get("description") or "").strip()
-    text = (body.get("text") or "").strip()
-    pdf_b64 = body.get("pdf")
 
     try:
-        svc = _client()
-        cc = svc.get_container_client(CONTAINER)
-
-        materials, pdf_bytes = [], None
+        mats = course.get("materials") or []
+        pdf_b64 = body.get("pdf")
+        pdf_bytes = None
         if pdf_b64:
-            if "," in pdf_b64[:64]:           # strip "data:application/pdf;base64,"
+            if "," in pdf_b64[:64]:
                 pdf_b64 = pdf_b64.split(",", 1)[1]
             pdf_bytes = base64.b64decode(pdf_b64)
-            materials = _materials_from_pdf(pdf_bytes, name)
-        if not materials and text:
-            materials = _materials_from_text(text, name)
-        if not materials:
-            materials = [{"id": "m0", "title": name, "ref": "descriere",
-                          "content": desc or name}]
+            mats = (mats + _materials_from_pdf(pdf_bytes, course.get("name"), len(mats)))[:120]
+        course["materials"] = mats
 
-        count = sum(1 for b in cc.list_blobs() if b.name.endswith(".json"))
-        col = PALETTE[count % len(PALETTE)]
-        cid = "c" + str(int(time.time() * 1000)) + str(random.randint(10, 99))
-        course = {
-            "id": cid, "name": name, "tag": tag, "progress": 0,
-            "c1": col[0], "c2": col[1],
-            "description": desc or "Curs încărcat de profesor.",
-            "materials": materials,
-            "docs": [["Document încărcat", "PDF" if pdf_bytes else "text"]],
-            "createdAt": int(time.time()),
-        }
+        svc = _client()
+        cc = svc.get_container_client(CONTAINER)
         cc.upload_blob(cid + ".json", json.dumps(course, ensure_ascii=False), overwrite=True)
         if pdf_bytes:
             cc.upload_blob(cid + ".pdf", pdf_bytes, overwrite=True)
