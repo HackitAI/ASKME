@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -519,9 +520,17 @@ async function callAzure(messages,max){
  if(!r.ok)throw new Error(await r.text());
  const d=await r.json();return d.choices[0].message.content.trim();
 }
-const STOP=new Set(['ce','este','sunt','un','o','de','la','si','și','in','în','cum','se','care','ale','pe','cu','al','a','pentru']);
+const STOP=new Set(['ce','este','sunt','un','o','de','la','si','și','in','în','cum','se','care','ale','pe','cu','al','a','pentru','curs','cursul','cursului','curse','acest','aceasta','acestui','acestei','material','materialul','materiale','materialele','despre','idei','principale','principala','rezuma','rezumat','rezuma','voi','vei','invata','invat','invatam','catva','cateva','prezinta','continut','continutul','noua','ne','mi','imi','spune','vreau']);
 function tok(t){return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(w=>w.length>2&&!STOP.has(w))}
 function retrieve(q,mats,k){const qt=tok(q);return mats.map(m=>{const mt=tok(m.title+' '+m.content);let s=0;qt.forEach(w=>{if(mt.includes(w))s+=2;else if(mt.some(x=>x.startsWith(w.slice(0,4))))s+=1});return{m,s}}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,k||3)}
+function isSummaryQ(q){return /rezum|ce voi (înv|inv)|despre ce|fapte[ -]?cheie|idei princip|structur|introducere|prezint|ce (înv|inv)|continut|conțin|la ce (foloseste|serveste|e bun)/i.test((q||'').toLowerCase());}
+function spreadChunks(mats,n){const pool=mats.length>4?mats.slice(1):mats;if(pool.length<=n)return pool.slice();const step=pool.length/n;const out=[];for(let i=0;i<n;i++)out.push(pool[Math.floor(i*step)]);return out;}
+function buildContext(q,mats){if(!mats||!mats.length)return [];
+ if(isSummaryQ(q))return spreadChunks(mats,8);
+ const hits=retrieve(q,mats,6).map(h=>h.m);
+ if(hits.length>=3)return hits;
+ const extra=spreadChunks(mats,6).filter(m=>hits.indexOf(m)<0);
+ return hits.concat(extra).slice(0,6);}
 
 /* ===== NAV ===== */
 const NAV={
@@ -589,14 +598,21 @@ async function ask(preset){
  const inp=document.getElementById('chatInput');const q=(preset||(inp?inp.value:'')).trim();if(!q)return;if(inp)inp.value='';
  const arr=chatArr();arr.push({role:'me',text:q});renderMain();
  const s=document.getElementById('stream');s.insertAdjacentHTML('beforeend','<div class="msg ai" id="tp"><div class="ava">AI</div><div class="b"><span class="typing"><i></i><i></i><i></i></span></div></div>');s.scrollTop=1e9;
- const mats=course().materials;const hits=retrieve(q,mats);const top=hits[0]?hits[0].m:null;
+ const mats=course().materials;const sel=buildContext(q,mats);const top=sel[0]||null;
  let ans;
  try{
-   if(isLive()){const ctxs=hits.map(h=>`### ${h.m.title} (${h.m.ref})\n${h.m.content}`).join('\n\n')||'(niciun material relevant)';
-     ans=await callAzure([{role:'system',content:`Ești asistentul cursului de ${course().name}. Răspunde EXCLUSIV pe baza materialelor de mai jos. Dacă răspunsul nu se află în ele, spune politicos că subiectul nu e acoperit în materialele cursului. Scrie în română, clar, max 4 propoziții.\n\nMateriale:\n${ctxs}`},{role:'user',content:q}]);
-   }else{ans=top?`${top.content.split('. ').slice(0,2).join('. ')}.`.replace('..','.'):'Acest subiect nu pare acoperit în materialele acestui curs. Reformulează sau alege alt concept.';}
- }catch(e){ans=(top?top.content.split('. ')[0]+'.':'Subiect neacoperit în materiale.')+' (apel Azure eșuat — verifică setările/CORS)';}
- arr.push({role:'ai',text:ans,src:top&&hits.length?{title:top.title,ref:top.ref,content:top.content}:null});renderMain();
+   if(isLive()){const ctxs=sel.map(m=>`### ${m.title} (${m.ref})\n${m.content}`).join('\n\n')||'(niciun material)';
+     const sys=`Ești asistentul cursului de ${course().name}. Răspunde EXCLUSIV pe baza fragmentelor de mai jos, extrase din materialele cursului.
+- Sintetizează CONȚINUTUL DE FOND (noțiuni, idei, fapte), NU instrucțiunile de utilizare, prefața sau cuprinsul.
+- Dacă fragmentele conțin doar text administrativ (prefață, „cum se folosește", cuprins, drepturi de autor), spune clar că textul extras pare să fie doar partea introductivă și că nu ai destul conținut de fond — nu inventa și nu eticheta greșit subiectul.
+- Scrie în română, clar. La rezumate folosește 4–6 propoziții; altfel răspunde la obiect.
+
+Fragmente:
+${ctxs}`;
+     ans=await callAzure([{role:'system',content:sys},{role:'user',content:q}],700);
+   }else{ans=top?`${top.content.split('. ').slice(0,2).join('. ')}.`.replace('..','.'):'Acest subiect nu pare acoperit în materialele acestui curs.';}
+ }catch(e){ans=(top?top.content.split('. ')[0]+'.':'Subiect neacoperit în materiale.')+' (apel eșuat)';}
+ arr.push({role:'ai',text:ans,src:top?{title:top.title,ref:top.ref,content:top.content}:null});renderMain();
 }
 
 /* ===== STUDENT: LIBRARY ===== */
